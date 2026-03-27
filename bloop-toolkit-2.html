@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Bloop 🫧 — My Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;background:#E8F4FD;font-family:'Nunito',sans-serif;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;}
+#app{display:flex;flex-direction:column;height:100dvh;width:100vw;}
+
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#FFD166;border-bottom:3px solid #F4A636;flex-shrink:0;min-height:58px;border-radius:0 0 20px 20px;}
+.logo{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:#1a3a5c;letter-spacing:-0.5px;}
+.logo em{color:#378ADD;font-style:normal;}
+#topbar-sub{font-size:12px;font-weight:800;color:#1a3a5c;opacity:.7;}
+
+#zone-tabs{display:flex;padding:12px 14px 0;gap:6px;background:#E8F4FD;border-bottom:none;flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+#zone-tabs::-webkit-scrollbar{display:none;}
+.ztab{padding:10px 14px;border-radius:18px 18px 0 0;font-size:12px;font-weight:900;cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.6);color:#888;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;line-height:1.3;transition:background .2s,color .2s;border:2px solid transparent;border-bottom:none;}
+.ztab.on.symp{background:#FFEDE8;color:#c0392b;border:2px solid #FF8C7A;border-bottom:none;}
+.ztab.on.dors{background:#E0F0FF;color:#1565C0;border:2px solid #5BA4E8;border-bottom:none;}
+.ztab.on.vent{background:#E0F7EE;color:#0a6e4a;border:2px solid #4DC9A0;border-bottom:none;}
+
+#tool-scroll{flex:1;overflow-y:auto;padding:14px 14px 24px;-webkit-overflow-scrolling:touch;background:#E8F4FD;}
+#tool-scroll::-webkit-scrollbar{width:3px;}
+#tool-scroll::-webkit-scrollbar-thumb{background:#EDE8E2;border-radius:2px;}
+.zone-label{font-size:13px;font-weight:900;color:#1a3a5c;margin-bottom:12px;letter-spacing:.02em;background:rgba(255,255,255,.6);padding:8px 14px;border-radius:14px;display:inline-block;}
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tool-card{background:#fff;border:2.5px solid #E0ECF8;border-radius:24px;padding:18px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 0 rgba(0,0,0,.06);}
+.tool-card:active{transform:scale(.96);}
+.tool-card.symp{border-color:#FFBDAD;background:#FFFAF9;}
+.tool-card.dors{border-color:#A8D4F5;background:#F8FBFF;}
+.tool-card.vent{border-color:#93DCBB;background:#F7FDFB;}
+.tc-icon{font-size:30px;line-height:1;}
+.tc-name{font-size:14px;font-weight:900;color:#1a3a5c;line-height:1.2;}
+.tc-sub{font-size:11px;color:#5a7a99;font-weight:700;line-height:1.4;}
+.tc-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;margin-top:2px;}
+.tc-tag.mic{background:#FFF0EE;color:#993C1D;}
+.tc-tag.tap{background:#E1F5EE;color:#0F6E56;}
+.tc-tag.touch{background:#EEEDFE;color:#3C3489;}
+.tc-tag.watch{background:#FAEEDA;color:#854F0B;}
+
+/* ACTIVITY OVERLAY */
+#act-overlay{display:none;position:fixed;inset:0;z-index:60;background:#E8F4FD;flex-direction:column;}
+#act-overlay.open{display:flex;}
+#act-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#FFD166;border-bottom:3px solid #F4A636;flex-shrink:0;border-radius:0 0 16px 16px;}
+#act-back{font-size:22px;cursor:pointer;padding:4px 10px;border-radius:14px;-webkit-tap-highlight-color:transparent;color:#1a3a5c;background:rgba(255,255,255,.5);}
+#act-title-txt{font-size:18px;font-weight:900;color:#1a3a5c;flex:1;}
+#act-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 16px 0;gap:12px;overflow:hidden;}
+
+/* Exit button — always floating at bottom */
+#exit-wrap{padding:12px 16px 20px;background:transparent;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;}
+#exit-btn{background:#fff;border:3px solid #A8D4F5;border-radius:32px;padding:13px 36px;font-size:15px;font-weight:900;color:#1565C0;cursor:pointer;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;transition:background .15s,border-color .15s;box-shadow:0 4px 0 rgba(90,164,232,.3);}
+#exit-btn:active{background:#F1EFE8;}
+
+/* Check-in overlay */
+#checkin-overlay{display:none;position:fixed;inset:0;z-index:70;background:rgba(44,44,42,.45);align-items:flex-end;justify-content:center;}
+#checkin-overlay.open{display:flex;}
+#checkin-card{background:#fff;border-radius:28px 28px 0 0;padding:24px 20px 36px;width:100%;max-width:480px;}
+#checkin-q{font-size:20px;font-weight:900;color:#1a3a5c;text-align:center;margin-bottom:16px;line-height:1.3;}
+#checkin-opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.copt{padding:14px 8px;border-radius:20px;border:2.5px solid #B8D8F0;background:#F0F8FF;font-size:15px;text-align:center;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;transition:background .15s,border-color .15s;-webkit-tap-highlight-color:transparent;}
+.copt:active{transform:scale(.95);}
+
+/* Common activity UI */
+.act-inst{font-size:14px;font-weight:700;color:#5a7a99;text-align:center;line-height:1.5;max-width:290px;background:rgba(255,255,255,.7);border-radius:16px;padding:10px 14px;}
+.act-lbl{font-size:17px;font-weight:900;color:#1a3a5c;text-align:center;min-height:24px;}
+.mstat{font-size:12px;font-weight:700;padding:5px 12px;border-radius:10px;text-align:center;}
+.mstat.on{background:#D4EFDD;color:#0a5c40;border:2px solid #7DDBA8;}
+.mstat.off{background:#EAF4FF;color:#5a7a99;border:2px solid #B8D8F0;}
+.mic-bar{width:100%;max-width:260px;height:8px;background:#EDE8E2;border-radius:4px;overflow:hidden;}
+.mic-fill{height:100%;width:0%;border-radius:4px;transition:width .08s linear;}
+
+/* Input for jar */
+#input-overlay{display:none;position:fixed;inset:0;z-index:80;background:rgba(44,44,42,.4);align-items:flex-end;justify-content:center;}
+#input-overlay.open{display:flex;}
+#input-box{background:#fff;border-radius:28px 28px 0 0;padding:22px 20px 34px;width:100%;max-width:480px;}
+#input-q{font-size:16px;font-weight:800;color:#2C2C2A;margin-bottom:14px;text-align:center;}
+#input-field{width:100%;border:2px solid #EDE8E2;border-radius:16px;padding:13px 16px;font-size:16px;font-family:'Nunito',sans-serif;font-weight:700;color:#2C2C2A;outline:none;-webkit-appearance:none;}
+#input-field:focus{border-color:#1D9E75;}
+#input-btns{display:flex;gap:10px;margin-top:12px;}
+.ibtn{flex:1;padding:12px;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+.ibtn.skip{border:2px solid #EDE8E2;background:#fff;color:#888780;}
+.ibtn.add{border:none;background:#1D9E75;color:#fff;}
+
+/* SAFETY BUTTON */
+#safe-btn{
+  position:fixed;bottom:24px;right:16px;
+  background:#fff;border:3px solid #FF8C7A;
+  border-radius:28px;height:44px;
+  display:flex;align-items:center;gap:6px;
+  padding:0 16px;font-size:13px;font-weight:900;
+  color:#c0392b;cursor:pointer;z-index:35;
+  box-shadow:0 4px 0 rgba(192,57,43,.2);
+  font-family:'Nunito',sans-serif;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .12s;
+}
+#safe-btn:active{transform:scale(.93);}
+
+/* SAFETY OVERLAY */
+#safety-overlay{
+  display:none;position:fixed;inset:0;z-index:90;
+  background:rgba(10,30,60,.55);
+  align-items:center;justify-content:center;
+}
+#safety-overlay.open{display:flex;}
+#safety-card{
+  background:#fff;border-radius:28px;
+  padding:24px 20px 28px;
+  width:calc(100% - 32px);max-width:420px;
+  display:flex;flex-direction:column;gap:16px;
+  max-height:90dvh;overflow-y:auto;
+}
+#safety-close{
+  align-self:flex-end;font-size:14px;font-weight:800;
+  color:#888;cursor:pointer;padding:4px 10px;
+  border:1.5px solid #EDE8E2;border-radius:12px;
+  -webkit-tap-highlight-color:transparent;
+}
+.saf-title{font-size:20px;font-weight:900;color:#1a3a5c;text-align:center;}
+.saf-sub{font-size:13px;font-weight:700;color:#5a7a99;text-align:center;line-height:1.5;}
+.help-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#F0F8FF;border-radius:16px;border:1.5px solid #B8D8F0;}
+.help-name{font-size:13px;font-weight:800;color:#1a3a5c;}
+.help-desc{font-size:11px;color:#5a7a99;font-weight:600;}
+.help-call{font-size:13px;font-weight:900;color:#1565C0;text-decoration:none;background:#DDEFFF;padding:7px 12px;border-radius:12px;}
+.saf-divider{height:1px;background:#EDE8E2;}
+
+/* BREATHING CIRCLE in safety */
+#saf-breath-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;}
+#saf-ring{
+  width:76px;height:76px;border-radius:50%;
+  background:#E0F7EE;border:2.5px solid #4DC9A0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  transition:transform 4s ease-in-out;
+  transform:scale(1);
+}
+#saf-ring-label{font-size:13px;font-weight:800;color:#0a6e4a;margin-top:4px;}
+#saf-progress{width:100%;height:5px;background:#EDE8E2;border-radius:3px;overflow:hidden;}
+#saf-bar{height:100%;background:#4DC9A0;width:0%;border-radius:3px;}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div class="logo">bl<em>oo</em>p</div>
+    <div id="topbar-sub">My Calm Toolkit 🧰</div>
+    <div style="width:50px;"></div>
+  </div>
+  <div id="zone-tabs">
+    <button class="ztab symp on" onclick="showZone('symp')">⚡ Big &amp; buzzy</button>
+    <button class="ztab dors" onclick="showZone('dors')">❄️ Heavy &amp; still</button>
+    <button class="ztab vent" onclick="showZone('vent')">🌊 Calm &amp; okay</button>
+  </div>
+  <div id="tool-scroll"></div>
+</div>
+
+<div id="act-overlay">
+  <div id="act-header">
+    <div id="act-back" onclick="exitPrompt()">←</div>
+    <div id="act-title-txt"></div>
+  </div>
+  <div id="act-body"></div>
+  <div id="exit-wrap">
+    <div style="font-size:11px;font-weight:700;color:#B4B2A9;text-align:center;">Stay as long as you like</div>
+    <button id="exit-btn" onclick="exitPrompt()">I'm done for now ✓</button>
+  </div>
+</div>
+
+<div id="checkin-overlay">
+  <div id="checkin-card">
+    <div id="checkin-q">How do you feel right now?</div>
+    <div id="checkin-opts"></div>
+  </div>
+</div>
+
+<div id="input-overlay" onclick="cancelInput()">
+  <div id="input-box" onclick="event.stopPropagation()">
+    <div id="input-q">What or who is this star for?</div>
+    <input id="input-field" type="text" placeholder="A person, place, or feeling…" autocomplete="off" autocorrect="off" spellcheck="false"/>
+    <div id="input-btns">
+      <button class="ibtn skip" onclick="cancelInput()">Skip</button>
+      <button class="ibtn add" onclick="submitInput()">Add star ⭐</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── TOOL REGISTRY ─────────────────────────────
+const ZONES = {
+  symp:{
+    tools:[
+      {id:'candle',    icon:'🕯️', name:'Candle breath',  sub:'Blow gently — make it dance',    tag:'mic'},
+      {id:'bubbles',   icon:'🫧',  name:'Bubble maker',   sub:'Blow bubbles, tap to pop!',       tag:'mic'},
+      {id:'dragon',    icon:'🐉',  name:'Dragon breath',  sub:'Breathe fire — let it all out!',  tag:'mic'},
+      {id:'pinwheel',  icon:'🌀',  name:'Pinwheel',       sub:'Steady slow blow keeps it going', tag:'mic'},
+      {id:'balloon',   icon:'🎈',  name:'Balloon blow',   sub:'Slow breath fills the balloon',   tag:'mic'},
+      {id:'shake',     icon:'🫨',  name:'Shake it out',   sub:'Tap fast to shake out tension',   tag:'tap'},
+    ]
+  },
+  dors:{
+    tools:[
+      {id:'bee',       icon:'🐝',  name:'Bee hum',        sub:'Hum to help the bee fly',         tag:'mic'},
+      {id:'star',      icon:'🌟',  name:'Star wake-up',   sub:'Hum to light the star',           tag:'mic'},
+      {id:'drum',      icon:'🥁',  name:'Drum tap',       sub:'Tap a beat — wake up your body',  tag:'tap'},
+      {id:'butterfly', icon:'🦋',  name:'Butterfly tap',  sub:'Left, right, left, right…',       tag:'tap'},
+      {id:'finger',    icon:'🖐',  name:'Finger breathing',sub:'Trace up and down each finger',  tag:'touch'},
+      {id:'wave',      icon:'🌊',  name:'Wave maker',     sub:'Tap a rhythm, make waves',        tag:'tap'},
+    ]
+  },
+  vent:{
+    tools:[
+      {id:'rainbow',   icon:'🌈',  name:'Rainbow trace',  sub:'Slowly draw a rainbow',           tag:'touch'},
+      {id:'lava',      icon:'🫙',  name:'Lava lamp',      sub:'Watch blobs float — tap to add',  tag:'watch'},
+      {id:'garden',    icon:'🌱',  name:'Grow a garden',  sub:'Each breath grows a flower',       tag:'mic'},
+      {id:'heart',     icon:'🫀',  name:'Heartbeat',      sub:'Tap your own heartbeat rhythm',    tag:'tap'},
+      {id:'jar',       icon:'⭐',  name:'Safe place jar', sub:'Fill it with safe things',         tag:'touch'},
+      {id:'tree',      icon:'🌳',  name:'Sway tree',      sub:'Sway slowly — shed leaves',        tag:'camera'},
+    ]
+  }
+};
+
+let currentZone='symp';
+
+function showZone(z){
+  currentZone=z;
+  document.querySelectorAll('.ztab').forEach(t=>t.classList.remove('on'));
+  document.querySelector('.ztab.'+z).classList.add('on');
+  const s=document.getElementById('tool-scroll');
+  const labels={symp:'Big and buzzy ⚡ — let the energy out',dors:'Heavy and still ❄️ — gently wake up',vent:'Calm and okay 🌊 — stay in the good feeling'};
+  s.innerHTML=`<div class="zone-label">${labels[z]}</div><div class="tools-grid"></div>`;
+  const grid=s.querySelector('.tools-grid');
+  ZONES[z].tools.forEach(t=>{
+    const card=document.createElement('div');
+    card.className=`tool-card ${z}`;
+    card.innerHTML=`<div class="tc-icon">${t.icon}</div><div class="tc-name">${t.name}</div><div class="tc-sub">${t.sub}</div><div class="tc-tag ${t.tag}">${t.tag}</div>`;
+    card.addEventListener('pointerdown',e=>{e.preventDefault();openActivity(t);});
+    grid.appendChild(card);
+  });
+}
+showZone('symp');
+
+// ── ACTIVITY OPEN/CLOSE ───────────────────────
+const titles={
+  candle:'Candle breath 🕯️',bubbles:'Bubble maker 🫧',dragon:'Dragon breath 🐉',pinwheel:'Pinwheel 🌀',balloon:'Balloon blow 🎈',shake:'Shake it out 🫨',
+  bee:'Bee hum 🐝',star:'Star wake-up 🌟',drum:'Drum tap 🥁',butterfly:'Butterfly tap 🦋',finger:'Finger breathing 🖐',wave:'Wave maker 🌊',
+  rainbow:'Rainbow trace 🌈',lava:'Lava lamp 🫙',garden:'Grow a garden 🌱',heart:'Heartbeat 🫀',jar:'Safe place jar ⭐',tree:'Sway tree 🌳'
+};
+
+function openActivity(tool){
+  stopAll();
+  document.getElementById('act-overlay').classList.add('open');
+  document.getElementById('act-title-txt').textContent=titles[tool.id]||tool.name;
+  const body=document.getElementById('act-body');
+  body.innerHTML='';
+  const builders={
+    candle:buildCandle,bubbles:buildBubbles,dragon:buildDragon,pinwheel:buildPinwheel,balloon:buildBalloon,shake:buildShake,
+    bee:buildBee,star:buildStar,drum:buildDrum,butterfly:buildButterfly,finger:buildFinger,wave:buildWave,
+    rainbow:buildRainbow,lava:buildLava,garden:buildGarden,heart:buildHeart,jar:buildJar,tree:buildTree
+  };
+  if(builders[tool.id]) builders[tool.id](body);
+}
+
+function exitPrompt(){
+  const opts=[
+    {e:'😌',l:'Calmer'},
+    {e:'😐',l:'Same'},
+    {e:'😊',l:'Better'},
+    {e:'💪',l:'Stronger'},
+    {e:'😔',l:'Still hard'},
+    {e:'🤔',l:'Not sure'},
+  ];
+  const co=document.getElementById('checkin-opts');
+  co.innerHTML='';
+  opts.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='copt';
+    btn.innerHTML=`${o.e}<br><span style="font-size:11px;">${o.l}</span>`;
+    btn.addEventListener('pointerdown',e=>{e.preventDefault();closeCheckin();});
+    co.appendChild(btn);
+  });
+  document.getElementById('checkin-overlay').classList.add('open');
+}
+function closeCheckin(){
+  document.getElementById('checkin-overlay').classList.remove('open');
+  document.getElementById('act-overlay').classList.remove('open');
+  stopAll();
+}
+
+// ── RESOURCE MANAGEMENT ───────────────────────
+const allRafs=new Set();
+let micStream=null,micRaf=null,audioCtx=null,analyser=null;
+let camStream=null;
+
+function regRaf(id){allRafs.add(id);}
+function stopAll(){
+  allRafs.forEach(id=>cancelAnimationFrame(id));allRafs.clear();
+  stopMic();stopCam();
+}
+
+async function startMic(onLevel,onFail){
+  if(!navigator.mediaDevices?.getUserMedia){if(onFail)onFail('unavailable');return false;}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    micStream=stream;
+    const src=audioCtx.createMediaStreamSource(stream);
+    analyser=audioCtx.createAnalyser();
+    analyser.fftSize=1024;analyser.smoothingTimeConstant=0.1;
+    src.connect(analyser);
+    const buf=new Uint8Array(analyser.frequencyBinCount);
+    function tick(){micRaf=requestAnimationFrame(tick);allRafs.add(micRaf);analyser.getByteTimeDomainData(buf);let s=0;for(let i=0;i<buf.length;i++){const v=(buf[i]-128)/128;s+=v*v;}onLevel(Math.sqrt(s/buf.length));}
+    tick();return true;
+  }catch(e){if(onFail)onFail(e.name==='NotAllowedError'?'denied':'unavailable');return false;}
+}
+function stopMic(){
+  if(micRaf){cancelAnimationFrame(micRaf);micRaf=null;}
+  if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null;}
+  if(audioCtx){audioCtx.close().catch(()=>{});audioCtx=null;}
+  analyser=null;
+}
+function stopCam(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}}
+
+function tone(f,type='sine',vol=0.12,dur=0.2){
+  try{const ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,ac.currentTime);g.gain.setValueAtTime(vol,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+dur);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+dur);setTimeout(()=>ac.close(),dur*1000+200);}catch(e){}
+}
+function drumSound(vol=0.4){
+  try{const ac=new(window.AudioContext||window.webkitAudioContext)();const buf=ac.createBuffer(1,ac.sampleRate*0.2,ac.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ac.sampleRate*0.04));const src=ac.createBufferSource(),g=ac.createGain();src.buffer=buf;g.gain.setValueAtTime(vol,ac.currentTime);src.connect(g);g.connect(ac.destination);src.start();setTimeout(()=>ac.close(),300);}catch(e){}
+}
+
+// Mic status helper
+function micEl(id){return document.getElementById(id);}
+function setMicSt(id,on,text){const el=micEl(id);if(el){el.className='mstat '+(on?'on':'off');el.textContent=text;}}
+
+// ═══════════════════════════════════════════
+// ⚡ SYMPATHETIC TOOLS
+// ═══════════════════════════════════════════
+
+function buildCandle(body){
+  body.innerHTML=`
+    <p class="act-inst">Blow gently — make the flame dance without blowing it out</p>
+    <canvas id="c-cv" width="200" height="200" style="border-radius:16px;background:#180800;"></canvas>
+    <div class="act-lbl" id="c-lbl">Blow gently… like a whisper 🕯️</div>
+    <div class="mstat off" id="c-ms">Starting mic…</div>`;
+  const cv=document.getElementById('c-cv'),ctx=cv.getContext('2d');
+  let tH=60,fH=60,t=0;
+  function draw(){
+    ctx.fillStyle='rgba(24,8,0,.22)';ctx.fillRect(0,0,200,200);
+    fH+=(tH-fH)*.14;const fl=Math.max(10,fH+Math.sin(t*.28)*4*Math.random());
+    const grd=ctx.createRadialGradient(100,118,0,100,118,fl*1.5);
+    grd.addColorStop(0,'rgba(255,200,50,.3)');grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd;ctx.beginPath();ctx.ellipse(100,118,fl*.95,fl*1.5,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#ffcc00';ctx.beginPath();ctx.moveTo(100,118);
+    ctx.bezierCurveTo(100-fl*.35,118-fl*.3,100-fl*.2,118-fl,100,118-fl);
+    ctx.bezierCurveTo(100+fl*.2,118-fl,100+fl*.35,118-fl*.3,100,118);ctx.fill();
+    ctx.fillStyle='rgba(150,220,255,.55)';ctx.beginPath();ctx.ellipse(100,118-fl*.15,fl*.1,fl*.25,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#e8d5b0';ctx.fillRect(88,130,24,60);
+    ctx.fillStyle='#3a2800';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(100,130);ctx.lineTo(100,118);ctx.stroke();
+    t++;
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+  startMic(rms=>{
+    const blow=rms>.01;
+    tH=blow?(rms>.09?18:60+rms*280):Math.max(38,tH-1.5);
+    setMicSt('c-ms',blow,'Blowing! 🌬');
+    if(!blow)setMicSt('c-ms',false,'Blow gently…');
+    const l=document.getElementById('c-lbl');
+    if(l)l.textContent=rms>.09?'Too hard — softer! 😮':blow?'Keep it dancing! 🕯️':'Blow gently… just a whisper';
+  },()=>setMicSt('c-ms',false,'No mic — just breathe and watch'));
+}
+
+function buildBubbles(body){
+  let bubbles=[],score=0;
+  body.innerHTML=`
+    <p class="act-inst">Blow into the mic — bubbles float up! Tap them to pop!</p>
+    <canvas id="bu-cv" width="280" height="200" style="border-radius:16px;background:#dff0ff;"></canvas>
+    <div class="act-lbl" id="bu-lbl">Start blowing… 🫧</div>
+    <div class="mstat off" id="bu-ms">Starting mic…</div>`;
+  const cv=document.getElementById('bu-cv'),ctx=cv.getContext('2d');
+  cv.addEventListener('pointerdown',e=>{
+    const r=cv.getBoundingClientRect();const px=(e.clientX-r.left)*(280/r.width),py=(e.clientY-r.top)*(200/r.height);
+    bubbles=bubbles.filter(b=>{if(Math.hypot(b.x-px,b.y-py)<b.r+12){score++;tone(500+Math.random()*400,'sine',.08,.12);return false;}return true;});
+  });
+  function spawn(sz){bubbles.push({x:40+Math.random()*200,y:200,vy:-(1+Math.random()*1.5+sz*3),vx:(Math.random()-.5)*1.5,r:8+sz*28,hue:180+Math.random()*60,life:1});}
+  function draw(){
+    ctx.clearRect(0,0,280,200);
+    const g=ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'#dff0ff');g.addColorStop(1,'#aad4f0');ctx.fillStyle=g;ctx.fillRect(0,0,280,200);
+    bubbles=bubbles.filter(b=>b.y>-b.r*2&&b.life>.04);
+    bubbles.forEach(b=>{b.y+=b.vy;b.x+=b.vx;b.life-=.0025;b.vx*=.99;
+      ctx.save();ctx.globalAlpha=b.life*.9;
+      const grd=ctx.createRadialGradient(b.x-b.r*.3,b.y-b.r*.3,0,b.x,b.y,b.r);
+      grd.addColorStop(0,`hsla(${b.hue},80%,95%,.9)`);grd.addColorStop(.7,`hsla(${b.hue},70%,70%,.4)`);grd.addColorStop(1,`hsla(${b.hue},80%,60%,.6)`);
+      ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fillStyle=grd;ctx.fill();
+      ctx.strokeStyle=`hsla(${b.hue},70%,75%,.7)`;ctx.lineWidth=1.5;ctx.stroke();
+      ctx.beginPath();ctx.arc(b.x-b.r*.3,b.y-b.r*.3,b.r*.2,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.75)';ctx.fill();
+      ctx.restore();
+    });
+    if(score>0){ctx.fillStyle='#185FA5';ctx.font='bold 13px Nunito,sans-serif';ctx.fillText(`Popped: ${score} 🫧`,10,20);}
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+  startMic(rms=>{
+    const bl=rms>.01;
+    if(bl&&Math.random()<rms*10&&bubbles.length<40)spawn(rms);
+    setMicSt('bu-ms',bl,bl?'Blowing! 🫧':'Blow to make bubbles…');
+    const l=document.getElementById('bu-lbl');if(l)l.textContent=bl?`${bubbles.length} bubbles! Tap to pop! 🫧`:'Blow to fill the sky with bubbles…';
+  },()=>setMicSt('bu-ms',false,'No mic — watch the sky!'));
+}
+
+function buildDragon(body){
+  let fire=[];
+  body.innerHTML=`
+    <p class="act-inst">Take a big breath in… then breathe out like a dragon! 🐉</p>
+    <canvas id="dr-cv" width="280" height="200" style="border-radius:16px;background:#140600;"></canvas>
+    <div class="act-lbl" id="dr-lbl">Breathe in… then ROAR OUT!</div>
+    <div class="mstat off" id="dr-ms">Starting mic…</div>`;
+  const cv=document.getElementById('dr-cv'),ctx=cv.getContext('2d');
+  let t=0;
+  function spawnFire(i){for(let n=0;n<Math.ceil(i*25);n++){const a=(Math.random()-.5)*.7;const sp=4+Math.random()*10+i*12;fire.push({x:42,y:105,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1,life:1,size:8+Math.random()*18+i*22,hue:10+Math.random()*30});}}
+  function draw(){
+    ctx.fillStyle='rgba(20,6,0,.22)';ctx.fillRect(0,0,280,200);
+    // dragon
+    ctx.fillStyle='#2d5a1b';ctx.beginPath();ctx.ellipse(32,105,30,23,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#3a7a24';ctx.beginPath();ctx.ellipse(32,100,23,19,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#f5e03c';ctx.beginPath();ctx.arc(40,96,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(41,96,2.5,0,Math.PI*2);ctx.fill();
+    fire=fire.filter(p=>p.life>.04);
+    fire.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.vx*=.97;p.life-=.022;
+      const grd=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size);
+      grd.addColorStop(0,`hsla(${p.hue+40},100%,90%,${p.life})`);grd.addColorStop(.4,`hsla(${p.hue},100%,60%,${p.life*.8})`);grd.addColorStop(1,'transparent');
+      ctx.save();ctx.globalAlpha=p.life*.9;ctx.fillStyle=grd;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();ctx.restore();
+    });
+    t++;
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+  startMic(rms=>{
+    const bl=rms>.02;if(bl)spawnFire(rms);
+    setMicSt('dr-ms',bl,bl?'FIRE! 🔥':'Breathe in… then OUT!');
+    const l=document.getElementById('dr-lbl');if(l)l.textContent=bl?'ROAR!! 🐉🔥':(fire.length>0?'Again! Breathe IN… then ROAR!':'Breathe in deep… then BREATHE OUT!');
+  },()=>setMicSt('dr-ms',false,'No mic — pretend to breathe fire!'));
+}
+
+function buildPinwheel(body){
+  body.innerHTML=`
+    <p class="act-inst">Blow steadily — keep the pinwheel spinning!</p>
+    <canvas id="pw-cv" width="220" height="220" style="border-radius:16px;background:#f0f8ff;"></canvas>
+    <div class="act-lbl" id="pw-lbl">Blow to spin it! 🌀</div>
+    <div class="mstat off" id="pw-ms">Starting mic…</div>`;
+  const cv=document.getElementById('pw-cv'),ctx=cv.getContext('2d');
+  let angle=0,spin=0,t=0;
+  const COLS=['#E24B4A','#EF9F27','#1D9E75','#378ADD','#7F77DD','#D4537E'];
+  function draw(){
+    ctx.clearRect(0,0,220,220);
+    ctx.fillStyle='#f0f8ff';ctx.fillRect(0,0,220,220);
+    // stick
+    ctx.strokeStyle='#8a6a40';ctx.lineWidth=5;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(110,220);ctx.lineTo(110,120);ctx.stroke();
+    // blades
+    for(let i=0;i<6;i++){
+      const a=angle+i*(Math.PI*2/6);
+      ctx.save();ctx.translate(110,115);ctx.rotate(a);
+      ctx.fillStyle=COLS[i];ctx.globalAlpha=.9;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(20,-10,40,-30,10,-50);ctx.bezierCurveTo(-10,-35,0,-15,0,0);ctx.fill();
+      ctx.restore();
+    }
+    // center
+    ctx.fillStyle='#888';ctx.beginPath();ctx.arc(110,115,6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(110,115,3,0,Math.PI*2);ctx.fill();
+    spin=Math.max(0,spin-.01);angle+=spin;t++;
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+  startMic(rms=>{
+    const bl=rms>.01;
+    if(bl)spin=Math.min(.35,spin+rms*1.5);
+    setMicSt('pw-ms',bl,bl?`Spinning! ${spin>.15?'Fast! 💨':'Keep going!'}` :'Blow to spin it…');
+    const l=document.getElementById('pw-lbl');
+    if(l)l.textContent=spin>.2?'Super fast! 🌪':spin>.08?'Keep blowing! 🌀':bl?'Spin spin spin!':'Blow steadily…';
+  },()=>setMicSt('pw-ms',false,'No mic — tap to spin!'));
+  cv.addEventListener('pointerdown',()=>{spin=Math.min(.35,spin+.12);});
+}
+
+function buildBalloon(body){
+  let fill=0,hold=false,blow=false,t=0,balDone=false;
+  body.innerHTML=`
+    <p class="act-inst">Breathe out slowly — hold the balloon or blow into your mic</p>
+    <div id="bal-w" style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+      <div style="height:170px;display:flex;align-items:flex-end;justify-content:center;">
+        <svg id="bal-s" width="120" height="150" viewBox="0 0 120 150" style="transform:scale(.5);transform-origin:center bottom;transition:transform .12s ease-out;">
+          <ellipse id="bal-b" cx="60" cy="65" rx="38" ry="46" fill="#E24B4A"/>
+          <ellipse cx="52" cy="50" rx="10" ry="7" fill="white" opacity=".3" transform="rotate(-20,52,50)"/>
+          <line x1="60" y1="111" x2="60" y2="140" stroke="#B4B2A9" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="act-lbl" id="bal-l">Hold to blow! 💨</div>
+      <div class="mic-bar"><div id="bal-f" class="mic-fill" style="background:#E24B4A;"></div></div>
+    </div>
+    <div class="mstat off" id="bal-ms">Starting mic…</div>`;
+  const w=document.getElementById('bal-w');
+  w.addEventListener('pointerdown',e=>{e.preventDefault();hold=true;},{passive:false});
+  w.addEventListener('pointerup',()=>{hold=false;});w.addEventListener('pointerleave',()=>{hold=false;});
+  (function loop(){
+    if(balDone)return;
+    regRaf(requestAnimationFrame(loop));
+    const act=hold||blow;
+    if(act)fill=Math.min(100,fill+.7);else fill=Math.max(0,fill-.2);
+    const s=document.getElementById('bal-s'),bar=document.getElementById('bal-f'),lbl=document.getElementById('bal-l'),bd=document.getElementById('bal-b');
+    if(!s)return;
+    s.style.transform=`scale(${.5+.55*(fill/100)})`;
+    if(bar)bar.style.width=fill+'%';
+    const r=Math.round(220+35*(fill/100)),g2=Math.round(60+140*(fill/100));
+    if(bd)bd.setAttribute('fill',`rgb(${r},${g2},60)`);
+    if(lbl){
+      if(fill<=0)lbl.textContent='Hold to blow! 💨';
+      else if(fill<30)lbl.textContent='Keep going… 💨';
+      else if(fill<70)lbl.textContent='It\'s growing! 🎈';
+      else lbl.textContent='Full! Let it go and fill again 🎈';
+      if(fill>=99&&!balDone){
+        balDone=true;
+        const lbl=document.getElementById('bal-l');
+        if(lbl)lbl.textContent='Amazing! 🎉 You did it!';
+        // Pop the balloon with a burst animation
+        const svg=document.getElementById('bal-s');
+        if(svg){svg.style.transition='transform .3s ease-out';svg.style.transform='scale(1.3)';
+          setTimeout(()=>{svg.style.transform='scale(0)';},300);}
+        // Show celebration after 1s
+        setTimeout(()=>{
+          const b2=document.getElementById('act-body');
+          if(b2)b2.innerHTML=`
+            <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px;">
+              <div style="font-size:72px;animation:doneFloat 2s ease-in-out infinite;">🎈</div>
+              <div style="font-size:22px;font-weight:900;color:#1a3a5c;text-align:center;">You did it!</div>
+              <div style="font-size:15px;font-weight:700;color:#5a7a99;text-align:center;max-width:260px;">Slow breaths out help the big feelings get smaller 💙</div>
+            </div>`;
+          stopAll();
+        },1200);
+      }
+    }
+    t++;
+  })();
+  startMic(rms=>{blow=rms>.012;if(blow)fill=Math.min(100,fill+rms*80);setMicSt('bal-ms',blow,blow?'Blowing! 💨':'Blow into your mic…');},()=>setMicSt('bal-ms',false,'Hold the balloon to blow it up!'));
+}
+
+function buildShake(body){
+  let speed=0,shakeCount=0,lastTap=0;
+  body.innerHTML=`
+    <p class="act-inst">Shake your device or tap fast — let the jelly wobble!</p>
+    <canvas id="sh-cv" width="220" height="220" style="border-radius:16px;background:#fff5f0;cursor:pointer;"></canvas>
+    <div class="act-lbl" id="sh-lbl">Tap fast to shake! 🫨</div>`;
+  const cv=document.getElementById('sh-cv'),ctx=cv.getContext('2d');
+  let pts=[],t=0;
+  for(let i=0;i<12;i++){const a=i/12*Math.PI*2;pts.push({a,r:55,base:55,noise:0});}
+  cv.addEventListener('pointerdown',e=>{
+    e.preventDefault();const now=Date.now();if(now-lastTap<400)speed=Math.min(1,speed+.12);else speed=Math.min(1,speed+.06);lastTap=now;shakeCount++;tone(100+Math.random()*80,'sine',.1,.1);
+  },{passive:false});
+  if(window.DeviceMotionEvent){window.addEventListener('devicemotion',e=>{const acc=e.accelerationIncludingGravity;if(!acc)return;const mag=Math.abs(acc.x||0)+Math.abs(acc.y||0)+Math.abs(acc.z||0);if(mag>20){speed=Math.min(1,speed+.18);shakeCount++;}});}
+  function draw(){
+    ctx.clearRect(0,0,220,220);ctx.fillStyle='#fff5f0';ctx.fillRect(0,0,220,220);
+    speed=Math.max(0,speed-.012);
+    pts.forEach((p,i)=>{p.noise+=speed*.3*(Math.random()-.5);p.r=p.base+p.noise*speed*40;p.noise*=.85;});
+    // jelly body
+    ctx.beginPath();
+    pts.forEach((p,i)=>{const x=110+Math.cos(p.a)*p.r,y=110+Math.sin(p.a)*p.r;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.closePath();
+    const grd=ctx.createRadialGradient(100,100,0,110,110,70);
+    grd.addColorStop(0,'#ffb3a0');grd.addColorStop(.6,'#ff8066');grd.addColorStop(1,'#e85030');
+    ctx.fillStyle=grd;ctx.fill();
+    // eyes
+    const jitter=speed*8;
+    ctx.fillStyle='white';ctx.beginPath();ctx.arc(96+Math.random()*jitter,100+Math.random()*jitter,10,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(124+Math.random()*jitter,100+Math.random()*jitter,10,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#2C2C2A';ctx.beginPath();ctx.arc(97+Math.random()*jitter,101+Math.random()*jitter,5,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(125+Math.random()*jitter,101+Math.random()*jitter,5,0,Math.PI*2);ctx.fill();
+    // smile (more wobbly with speed)
+    ctx.strokeStyle='#2C2C2A';ctx.lineWidth=3;ctx.lineCap='round';
+    ctx.beginPath();ctx.arc(110+Math.random()*jitter*2,110,18+speed*5,0.2,Math.PI-.2);ctx.stroke();
+    const l=document.getElementById('sh-lbl');
+    if(l)l.textContent=speed>.6?'SHAKE IT! 🫨💥':speed>.3?'Keep shaking! 🫨':speed>.1?'Almost… tap faster!':'Tap fast to shake! 🫨';
+    t++;
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+}
+
+// ═══════════════════════════════════════════
+// ❄️ DORSAL TOOLS
+// ═══════════════════════════════════════════
+
+function buildBee(body){
+  let fill=0,hum=false;
+  body.innerHTML=`
+    <p class="act-inst">Make a long mmmmmm sound — help the bee fly higher and higher!</p>
+    <div id="bee-w" style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+      <div style="height:160px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+        <svg id="bee-s" width="120" height="110" viewBox="0 0 120 110" style="transform:translateY(55px);transition:transform .4s ease-out;">
+          <ellipse cx="60" cy="75" rx="20" ry="14" fill="#EF9F27"/>
+          <ellipse cx="60" cy="75" rx="20" ry="14" fill="none" stroke="#2C2C2A" stroke-width="1.5"/>
+          <ellipse cx="53" cy="75" rx="6" ry="8" fill="#2C2C2A"/><ellipse cx="67" cy="75" rx="6" ry="8" fill="#2C2C2A"/>
+          <ellipse cx="53" cy="74" rx="4.5" ry="6" fill="#EF9F27"/><ellipse cx="67" cy="74" rx="4.5" ry="6" fill="#EF9F27"/>
+          <ellipse cx="60" cy="66" rx="13" ry="11" fill="#EF9F27" stroke="#2C2C2A" stroke-width="1.2"/>
+          <circle cx="55" cy="62" r="3" fill="#2C2C2A"/><circle cx="65" cy="62" r="3" fill="#2C2C2A"/>
+          <circle cx="54" cy="61" r="1" fill="white"/><circle cx="64" cy="61" r="1" fill="white"/>
+          <ellipse id="bee-wl" cx="44" cy="54" rx="17" ry="9" fill="rgba(200,230,255,.8)" stroke="#9FE1CB" stroke-width="1.2" transform="rotate(-18,44,54)"/>
+          <ellipse id="bee-wr" cx="76" cy="54" rx="17" ry="9" fill="rgba(200,230,255,.8)" stroke="#9FE1CB" stroke-width="1.2" transform="rotate(18,76,54)"/>
+        </svg>
+      </div>
+      <div class="act-lbl" id="bee-l">Hum or tap to help it fly! 🐝</div>
+      <div class="mic-bar"><div id="bee-f" class="mic-fill" style="background:#EF9F27;"></div></div>
+    </div>
+    <div class="mstat off" id="bee-ms">Starting mic…</div>`;
+  const w=document.getElementById('bee-w');w.addEventListener('pointerdown',e=>{e.preventDefault();fill=Math.min(100,fill+10);updateBee();},{passive:false});
+  (function loop(){
+    regRaf(requestAnimationFrame(loop));
+    if(hum)fill=Math.min(100,fill+2.2);else fill=Math.max(0,fill-.3);
+    // reset when full for endless loop
+    if(fill>=99){fill=0;tone(880,'sine',.08,.3);tone(1100,'sine',.06,.25);}
+    updateBee();
+  })();
+  function updateBee(){
+    const s=document.getElementById('bee-s'),bar=document.getElementById('bee-f'),l=document.getElementById('bee-l'),wl=document.getElementById('bee-wl'),wr=document.getElementById('bee-wr');
+    if(!s)return;
+    s.style.transform=`translateY(${55-(fill/100)*65}px)`;
+    if(bar)bar.style.width=fill+'%';
+    if(wl&&wr){const fly=hum&&fill>5;wl.style.animation=fly?'wfp .12s ease-in-out infinite':'none';wr.style.animation=fly?'wfp .12s ease-in-out infinite .06s':'none';}
+    if(l)l.textContent=fill<10?'Hum or tap! 🐝':fill<50?'Keep humming! Bzzz!':fill<80?'It\'s flying! 🐝':fill<99?'So high! Bzzzz! ✨':'Again! 🎉';
+  }
+  // Sustained hum detection: must be above threshold for 8+ consecutive frames
+  let beeSustain=0;
+  startMic(rms=>{
+    if(rms>0.018) beeSustain=Math.min(12,beeSustain+1);
+    else beeSustain=Math.max(0,beeSustain-2);
+    hum=(beeSustain>=8);
+    setMicSt('bee-ms',hum,hum?'Humming! Bzzzz 🐝':'Keep humming steadily… mmmm');
+  },()=>setMicSt('bee-ms',false,'No mic — tap the bee!'));
+}
+const wfpStyle=document.createElement('style');wfpStyle.textContent='@keyframes wfp{0%,100%{transform:scaleY(1) rotate(-18deg);}50%{transform:scaleY(.2) rotate(-30deg);}} @keyframes doneFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}';document.head.appendChild(wfpStyle);
+
+function buildStar(body){
+  let brightness=0,hum=false;
+  body.innerHTML=`
+    <p class="act-inst">Hum mmmmm… watch the star wake up and shine!</p>
+    <canvas id="st-cv" width="220" height="220" style="border-radius:16px;background:#08031a;"></canvas>
+    <div class="act-lbl" id="st-lbl">Hum to wake the star… ✨</div>
+    <div class="mstat off" id="st-ms">Starting mic…</div>`;
+  const cv=document.getElementById('st-cv'),ctx=cv.getContext('2d');
+  let t=0,rays=Array(8).fill(0).map((_,i)=>({a:i*Math.PI/4,len:0}));
+  function draw(){
+    ctx.fillStyle=`rgba(8,3,26,.2)`;ctx.fillRect(0,0,220,220);t++;
+    const sz=18+brightness*55;
+    const grd=ctx.createRadialGradient(110,110,0,110,110,sz*2.5);
+    grd.addColorStop(0,`rgba(255,220,80,${brightness*.55})`);grd.addColorStop(.5,`rgba(200,160,255,${brightness*.2})`);grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd;ctx.beginPath();ctx.arc(110,110,sz*2.5,0,Math.PI*2);ctx.fill();
+    rays.forEach(r=>{r.len+=(brightness*45-r.len)*.1;const rx=Math.cos(r.a+t*.012),ry=Math.sin(r.a+t*.012);ctx.beginPath();ctx.moveTo(110+rx*sz*.8,110+ry*sz*.8);ctx.lineTo(110+rx*(sz*.8+r.len),110+ry*(sz*.8+r.len));ctx.strokeStyle=`rgba(255,220,80,${brightness*.7})`;ctx.lineWidth=2;ctx.stroke();});
+    ctx.fillStyle=`rgb(${Math.round(60+brightness*195)},${Math.round(50+brightness*170)},${Math.round(10+brightness*50)})`;
+    ctx.beginPath();for(let i=0;i<10;i++){const a=i*Math.PI/5-Math.PI/2,r2=i%2===0?sz:sz*.38;i===0?ctx.moveTo(110+Math.cos(a)*r2,110+Math.sin(a)*r2):ctx.lineTo(110+Math.cos(a)*r2,110+Math.sin(a)*r2);}ctx.closePath();ctx.fill();
+    if(brightness>.8&&Math.random()<brightness*.4){ctx.fillStyle='rgba(255,255,200,.9)';ctx.beginPath();ctx.arc(110+(Math.random()-.5)*110,110+(Math.random()-.5)*110,Math.random()*2.5+1,0,Math.PI*2);ctx.fill();}
+    if(brightness<.15){ctx.fillStyle='rgba(150,130,200,.55)';ctx.font='bold 16px Nunito,sans-serif';ctx.textAlign='center';ctx.fillText('z',126,95);ctx.font='12px Nunito,sans-serif';ctx.fillText('z',136,83);}
+    if(brightness>=1){brightness=0;} // endless — reset and sleep again
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));if(hum)brightness=Math.min(1,brightness+.022);else brightness=Math.max(0,brightness-.006);draw();})();
+  let starSustain=0;
+  startMic(rms=>{
+    if(rms>0.018) starSustain=Math.min(12,starSustain+1);
+    else starSustain=Math.max(0,starSustain-2);
+    hum=(starSustain>=8);
+    setMicSt('st-ms',hum,hum?'Humming! ✨':'Keep humming steadily… mmmm');
+    const l=document.getElementById('st-lbl');
+    if(l)l.textContent=brightness<.3?'Hum and wake it… ✨':brightness<.7?'It\'s waking up! 🌟':brightness<.99?'Almost awake! ⭐':'Again! Let it sleep and wake again 🌟';
+  },()=>setMicSt('st-ms',false,'No mic — watch it glow slowly'));
+}
+
+function buildDrum(body){
+  let ripples=[],t=0,totalTaps=0,streak=0,lastBeat=0;
+  body.innerHTML=`
+    <p class="act-inst">Tap the drum — find your rhythm! Feel the beat in your body!</p>
+    <canvas id="dm-cv" width="260" height="200" style="border-radius:16px;background:#FFF9F4;cursor:pointer;"></canvas>
+    <div class="act-lbl" id="dm-lbl">Tap the drum! 🥁</div>`;
+  const cv=document.getElementById('dm-cv'),ctx=cv.getContext('2d');
+  cv.addEventListener('pointerdown',e=>{
+    e.preventDefault();const r=cv.getBoundingClientRect();const rx=((e.clientX-r.left)/r.width)*260,ry=((e.clientY-r.top)/r.height)*200;
+    if(Math.hypot(rx-130,ry-110)<80){const now=Date.now();const gap=now-lastBeat;if(gap<1200&&gap>150){streak++;}else streak=1;lastBeat=now;totalTaps++;
+      ripples.push({x:rx,y:ry,r:0,life:1});drumSound(.3+Math.min(streak*.04,.35));
+      const l=document.getElementById('dm-lbl');if(l){const m=['Tap! 🥁','Again! 🥁','Keep going!','Feel the beat!','Yes! 🎶','Rhythm! 💥','Woah! 🌟','Amazing! 🎊','Keep drumming!','Feel it! 🥁'];l.textContent=m[Math.min(streak-1,9)];}}
+  },{passive:false});
+  function draw(){
+    ctx.clearRect(0,0,260,200);
+    const grd=ctx.createRadialGradient(130,110,0,130,110,85);grd.addColorStop(0,'#c94f1a');grd.addColorStop(1,'#8a3010');
+    ctx.fillStyle=grd;ctx.beginPath();ctx.ellipse(130,110,85,55,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.1)';ctx.beginPath();ctx.ellipse(108,88,52,28,Math.PI*.15,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#6b2508';ctx.beginPath();ctx.ellipse(130,132,85,55,0,0,Math.PI);ctx.lineTo(45,158);ctx.ellipse(130,158,85,28,0,Math.PI,0);ctx.closePath();ctx.fill();
+    ripples=ripples.filter(r=>r.life>.04);ripples.forEach(r=>{r.r+=5;r.life-=.038;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,Math.PI*2);ctx.strokeStyle=`rgba(255,200,100,${r.life*.8})`;ctx.lineWidth=2.5;ctx.stroke();});
+    t++;
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+}
+
+function buildButterfly(body){
+  let tapCount=0,lastSide=-2,lastTap=0,wings={l:0,r:0};
+  body.innerHTML=`
+    <p class="act-inst">Tap LEFT then RIGHT — like butterfly wings! Left… right… left… right…</p>
+    <canvas id="bf-cv" width="280" height="220" style="border-radius:16px;background:#f0f8ff;cursor:pointer;"></canvas>
+    <div class="act-lbl" id="bf-lbl">Tap left side, then right side 🦋</div>
+    <div style="display:flex;gap:10px;width:100%;max-width:260px;">
+      <div style="flex:1;height:52px;border-radius:16px;background:#E6F1FB;border:2px solid #B5D4F4;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;" id="left-tap">👈</div>
+      <div style="flex:1;height:52px;border-radius:16px;background:#E6F1FB;border:2px solid #B5D4F4;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;" id="right-tap">👉</div>
+    </div>`;
+  const cv=document.getElementById('bf-cv'),ctx=cv.getContext('2d');
+  let t=0;
+  function tap(side){
+    const now=Date.now();if(now-lastTap<100)return;lastTap=now;
+    wings[side]=1;tapCount++;
+    if(side==='l')tone(220,'sine',.12,.2);else tone(330,'sine',.12,.2);
+    const l=document.getElementById('bf-lbl');
+    if(l){const m=['Now the RIGHT! 👉','Now the LEFT! 👈','Right! 👉','Left! 👈','Keep going! 🦋','Feel the rhythm! 🦋','Beautiful! 🦋','Bilateral magic! 🌟'];l.textContent=m[tapCount%8];}
+  }
+  document.getElementById('left-tap').addEventListener('pointerdown',e=>{e.preventDefault();tap('l');},{passive:false});
+  document.getElementById('right-tap').addEventListener('pointerdown',e=>{e.preventDefault();tap('r');},{passive:false});
+  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();const x=(e.clientX-r.left);tap(x<r.width/2?'l':'r');});
+  function draw(){
+    ctx.clearRect(0,0,280,220);const g=ctx.createLinearGradient(0,0,0,220);g.addColorStop(0,'#e8f4ff');g.addColorStop(1,'#d0ecff');ctx.fillStyle=g;ctx.fillRect(0,0,280,220);
+    wings.l=Math.max(0,wings.l-.06);wings.r=Math.max(0,wings.r-.06);t++;
+    const swing=Math.sin(t*.05)*5;
+    // Body
+    ctx.fillStyle='#2C2C2A';ctx.beginPath();ctx.ellipse(140,115,7,26,0,0,Math.PI*2);ctx.fill();
+    // Head
+    ctx.fillStyle='#3a3a3a';ctx.beginPath();ctx.arc(140,85,8,0,Math.PI*2);ctx.fill();
+    // Antennae
+    ctx.strokeStyle='#2C2C2A';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(136,79);ctx.quadraticCurveTo(120,60,115,52);ctx.stroke();ctx.beginPath();ctx.moveTo(144,79);ctx.quadraticCurveTo(160,60,165,52);ctx.stroke();
+    ctx.fillStyle='#E24B4A';ctx.beginPath();ctx.arc(115,52,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(165,52,4,0,Math.PI*2);ctx.fill();
+    // Wings
+    [[140,110,-1,'#7F77DD','#AFA9EC',wings.l],[140,110,1,'#D4537E','#ED93B1',wings.r]].forEach(([x,y,dir,c1,c2,w])=>{
+      const scX=dir*(0.6+w*.6),ang=dir*(.4+w*.5)+swing*.02*dir;
+      ctx.save();ctx.translate(x,y);ctx.transform(scX,0,ang,1,0,0);
+      ctx.fillStyle=c1;ctx.globalAlpha=.88;ctx.beginPath();ctx.ellipse(dir*42,0,44,50,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=c2;ctx.globalAlpha=.55;ctx.beginPath();ctx.ellipse(dir*36,-6,28,32,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=c1;ctx.globalAlpha=.75;ctx.beginPath();ctx.ellipse(dir*38,34,28,26,0,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    });
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+}
+
+function buildFinger(body){
+  let phase=0,finger=0,dir='up',tracing=false,fingerPts=[];
+  body.innerHTML=`
+    <p class="act-inst">Trace up each finger (breathe in) and down (breathe out)</p>
+    <canvas id="fi-cv" width="260" height="240" style="border-radius:16px;background:#FFF9F4;touch-action:none;cursor:crosshair;"></canvas>
+    <div class="act-lbl" id="fi-lbl">Start at the bottom — trace up the first finger 🖐</div>`;
+  const cv=document.getElementById('fi-cv'),ctx=cv.getContext('2d');
+  // finger tip positions and base
+  const FINGERS=[{tip:[60,40],base:[55,170]},{tip:[95,22],base:[90,165]},{tip:[130,18],base:[125,162]},{tip:[162,26],base:[158,166]},{tip:[200,55],base:[195,170]}];
+  let highlight=0,progress=0,completedFingers=0;
+
+  function draw(){
+    ctx.clearRect(0,0,260,240);ctx.fillStyle='#FFF9F4';ctx.fillRect(0,0,260,240);
+    // hand outline (simple)
+    ctx.fillStyle='#FDEBD0';ctx.strokeStyle='#D4A870';ctx.lineWidth=2;
+    // palm
+    ctx.beginPath();ctx.ellipse(130,185,80,45,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // fingers
+    FINGERS.forEach((f,i)=>{
+      const w=i===4?16:18;
+      const done=i<completedFingers,cur=i===highlight;
+      ctx.fillStyle=done?'#A8D5A2':cur?'#FFE0B2':'#FDEBD0';
+      ctx.strokeStyle=done?'#4CAF50':cur?'#FF9800':'#D4A870';
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(f.base[0]-w/2,f.base[1]);ctx.lineTo(f.tip[0]-w/2,f.tip[1]+8);
+      ctx.arc(f.tip[0],f.tip[1]+8,w/2,Math.PI,0);ctx.lineTo(f.base[0]+w/2,f.base[1]);ctx.closePath();ctx.fill();ctx.stroke();
+      // progress indicator on current finger
+      if(cur&&progress>0){
+        const px=f.base[0]+(f.tip[0]-f.base[0])*(dir==='up'?progress:1-progress);
+        const py=f.base[1]+(f.tip[1]-f.base[1])*(dir==='up'?progress:1-progress);
+        ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);ctx.fillStyle='rgba(255,140,0,.8)';ctx.fill();
+      }
+    });
+    // thumb label
+    ctx.fillStyle='#888780';ctx.font='bold 10px Nunito,sans-serif';ctx.textAlign='center';
+    ctx.fillText('breathe in ↑',130,10);ctx.fillText('breathe out ↓',130,235);
+  }
+
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();tracing=true;handleMove(e);},{passive:false});
+  cv.addEventListener('pointermove',e=>{e.preventDefault();if(!tracing)return;handleMove(e);},{passive:false});
+  cv.addEventListener('pointerup',()=>{tracing=false;});
+  cv.addEventListener('touchstart',e=>{e.preventDefault();tracing=true;handleMove(e);},{passive:false});
+  cv.addEventListener('touchmove',e=>{e.preventDefault();if(!tracing)return;handleMove(e);},{passive:false});
+  cv.addEventListener('touchend',()=>{tracing=false;});
+
+  function handleMove(e){
+    const r=cv.getBoundingClientRect();
+    const x=((e.touches?e.touches[0].clientX:e.clientX)-r.left)*(260/r.width);
+    const y=((e.touches?e.touches[0].clientY:e.clientY)-r.top)*(240/r.height);
+    const f=FINGERS[highlight];
+    // track vertical progress
+    const totalH=f.base[1]-f.tip[1];
+    const relY=f.base[1]-y;
+    progress=Math.max(0,Math.min(1,relY/totalH));
+    // detect direction change
+    if(progress>.9&&dir==='up'){dir='down';const l=document.getElementById('fi-lbl');if(l)l.textContent='Breathe OUT — trace down ↓';}
+    if(progress<.1&&dir==='down'){dir='up';completedFingers++;highlight=Math.min(4,highlight+1);
+      if(highlight>4||completedFingers>=5){completedFingers=0;highlight=0;tone(523,'sine',.1,.3);const l=document.getElementById('fi-lbl');if(l)l.textContent='Beautiful! Start again whenever 🖐';}
+      else{const l=document.getElementById('fi-lbl');if(l)l.textContent=`Next finger — breathe in ↑ (${5-highlight} left)`;}}
+  }
+
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+}
+
+function buildWave(body){
+  let waves=[],t=0,totalTaps=0,lastTap=0;
+  body.innerHTML=`
+    <p class="act-inst">Tap left side… then right side… in a steady rhythm 🌊</p>
+    <canvas id="wv-cv" width="280" height="180" style="border-radius:16px;background:#c8e8ff;cursor:pointer;"></canvas>
+    <div class="act-lbl" id="wv-lbl">Tap to make waves! 🌊</div>`;
+  const cv=document.getElementById('wv-cv'),ctx=cv.getContext('2d');
+  cv.addEventListener('pointerdown',e=>{
+    e.preventDefault();const r=cv.getBoundingClientRect();const x=((e.clientX-r.left)/r.width)*280;
+    const now=Date.now(),gap=now-lastTap;lastTap=now;totalTaps++;
+    const dir=x<140?-1:1;
+    if(gap<1500&&gap>80)waves.push({x:140,y:90,r:0,dir,life:1,spd:2.5+Math.abs(1000-gap)/400});
+    tone(dir<0?220:330,'sine',.1,.18);
+    const l=document.getElementById('wv-lbl');if(l){const m=['🌊 Wave!','Other side!','Keep the rhythm!','Nice and steady!','Feel the waves!','Bilateral! 🌊','Beautiful rhythm! 🌟','Keep going! 🌊'];l.textContent=m[Math.min(totalTaps-1,7)%8];}
+  },{passive:false});
+  function draw(){
+    ctx.clearRect(0,0,280,180);const g=ctx.createLinearGradient(0,0,0,180);g.addColorStop(0,'#c8e8ff');g.addColorStop(1,'#6bb8e8');ctx.fillStyle=g;ctx.fillRect(0,0,280,180);
+    waves=waves.filter(w=>w.life>.04);waves.forEach(w=>{w.r+=w.spd;w.life-=.016;ctx.save();ctx.scale(1+w.dir*.25,1);ctx.beginPath();ctx.ellipse(w.x/(1+w.dir*.25),w.y,w.r,w.r*.32,0,0,Math.PI*2);ctx.strokeStyle=`rgba(30,100,180,${w.life*.55})`;ctx.lineWidth=2.5;ctx.stroke();ctx.restore();});
+    for(let i=0;i<5;i++){const wy=55+i*28;ctx.beginPath();ctx.moveTo(0,wy);for(let x=0;x<=280;x+=4)ctx.lineTo(x,wy+Math.sin((x+t*2+i*30)*.04)*4);ctx.strokeStyle=`rgba(255,255,255,${.12+i*.025})`;ctx.lineWidth=1.5;ctx.stroke();}
+    t++;
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+}
+
+// ═══════════════════════════════════════════
+// 🌊 VENTRAL TOOLS
+// ═══════════════════════════════════════════
+
+function buildRainbow(body){
+  let strokes=[],totalDist=0,t=0;
+  body.innerHTML=`
+    <p class="act-inst">Slowly drag your finger across the sky — no rush, take your time 🌈</p>
+    <canvas id="rb-cv" width="280" height="200" style="border-radius:16px;touch-action:none;cursor:crosshair;"></canvas>
+    <div class="act-lbl" id="rb-lbl">Drag slowly… make it beautiful 🌈</div>`;
+  const cv=document.getElementById('rb-cv'),ctx=cv.getContext('2d');
+  const COLS=['#E24B4A','#EF9F27','#F5E03C','#1D9E75','#378ADD','#7F77DD'];
+  let drawing=false,lx=0,ly=0;
+  function drawBg(){const g=ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'#87CEEB');g.addColorStop(1,'#E0F4FF');ctx.fillStyle=g;ctx.fillRect(0,0,280,200);[[55,38,28],[198,58,20],[138,28,16]].forEach(([x,y,r])=>{ctx.fillStyle='rgba(255,255,255,.7)';ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x+18,y+4,r*.65,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x-12,y+7,r*.55,0,Math.PI*2);ctx.fill();});}
+  function redraw(){drawBg();strokes.forEach(s=>{ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.strokeStyle=s.col;ctx.lineWidth=s.w;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();});}
+  drawBg();
+  function getXY(e){const r=cv.getBoundingClientRect();if(e.touches)return{x:(e.touches[0].clientX-r.left)*(280/r.width),y:(e.touches[0].clientY-r.top)*(200/r.height)};return{x:(e.clientX-r.left)*(280/r.width),y:(e.clientY-r.top)*(200/r.height)};}
+  function move(e){if(!drawing)return;const{x,y}=getXY(e);const d=Math.hypot(x-lx,y-ly);totalDist+=d;for(let i=0;i<COLS.length;i++)strokes.push({x1:lx,y1:ly+(i-2)*9,x2:x,y2:y+(i-2)*9,col:COLS[i],w:8});redraw();lx=x;ly=y;const l=document.getElementById('rb-lbl');if(l)l.textContent=totalDist>1500?'Your rainbow is so beautiful! 🌈':totalDist>600?'Keep going… so lovely ✨':'Slowly… take your time 🌈';}
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();drawing=true;const{x,y}=getXY(e);lx=x;ly=y;},{passive:false});
+  cv.addEventListener('pointermove',e=>{e.preventDefault();move(e);},{passive:false});
+  cv.addEventListener('pointerup',()=>{drawing=false;});
+  cv.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const{x,y}=getXY(e);lx=x;ly=y;},{passive:false});
+  cv.addEventListener('touchmove',e=>{e.preventDefault();move(e);},{passive:false});
+  cv.addEventListener('touchend',()=>{drawing=false;});
+}
+
+function buildLava(body){
+  let blobs=[];
+  for(let i=0;i<6;i++)blobs.push({x:40+Math.random()*200,y:100+Math.random()*120,vy:-(0.2+Math.random()*.4),vx:(Math.random()-.5)*.2,r:18+Math.random()*24,hue:10+Math.random()*30,phase:Math.random()*Math.PI*2});
+  body.innerHTML=`
+    <p class="act-inst">Watch the blobs float… tap to add more. Just breathe and enjoy 🫙</p>
+    <canvas id="lv-cv" width="260" height="220" style="border-radius:16px;background:#1a0800;cursor:pointer;"></canvas>
+    <div class="act-lbl">Breathe and watch… nothing to do 🌿</div>`;
+  const cv=document.getElementById('lv-cv'),ctx=cv.getContext('2d');
+  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();blobs.push({x:(e.clientX-r.left)*(260/r.width),y:200,vy:-(0.3+Math.random()*.4),vx:(Math.random()-.5)*.3,r:16+Math.random()*20,hue:10+Math.random()*30,phase:0});tone(200+Math.random()*100,'sine',.06,.4);});
+  let t=0;
+  (function loop(){
+    regRaf(requestAnimationFrame(loop));t++;
+    ctx.fillStyle='rgba(26,8,0,.15)';ctx.fillRect(0,0,260,220);
+    blobs.forEach(b=>{
+      b.phase+=.02;b.y+=b.vy*(0.8+Math.sin(b.phase)*.4);b.x+=b.vx;b.vx*=.995;
+      if(b.y<-b.r-20){b.y=210;b.vy=-(0.2+Math.random()*.4);b.x=30+Math.random()*200;}
+      if(b.y>220+b.r){b.y=-b.r;b.vy=-(0.2+Math.random()*.4);}
+      const grd=ctx.createRadialGradient(b.x-b.r*.3,b.y-b.r*.3,0,b.x,b.y,b.r);
+      const h=b.hue+Math.sin(t*.02)*15;
+      grd.addColorStop(0,`hsla(${h},100%,70%,.9)`);grd.addColorStop(.6,`hsla(${h},100%,50%,.7)`);grd.addColorStop(1,`hsla(${h},80%,30%,.4)`);
+      ctx.fillStyle=grd;ctx.beginPath();
+      const wobbleR=b.r*(1+Math.sin(b.phase)*0.15);
+      ctx.arc(b.x,b.y,wobbleR,0,Math.PI*2);ctx.fill();
+      // shine
+      ctx.fillStyle='rgba(255,255,255,.2)';ctx.beginPath();ctx.arc(b.x-b.r*.3,b.y-b.r*.35,b.r*.28,0,Math.PI*2);ctx.fill();
+    });
+    // lamp glass
+    ctx.strokeStyle='rgba(200,120,60,.3)';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(15,10,230,200,12);ctx.stroke();
+  })();
+}
+
+function buildGarden(body){
+  let flowers=[],breath=0,blow=false,t=0;
+  body.innerHTML=`
+    <p class="act-inst">Each slow breath grows a flower — breathe in, breathe out 🌱</p>
+    <canvas id="gd-cv" width="280" height="200" style="border-radius:16px;background:#e8f5e9;"></canvas>
+    <div class="act-lbl" id="gd-lbl">Breathe in slowly… 🌱</div>
+    <div class="mstat off" id="gd-ms">Starting mic…</div>`;
+  const cv=document.getElementById('gd-cv'),ctx=cv.getContext('2d');
+  const PCOLS=['#E24B4A','#EF9F27','#F5E03C','#D4537E','#7F77DD','#EF9F27'];
+  function addFlower(){const x=25+flowers.length*40+(Math.random()*10-5);flowers.push({x,stemH:0,petalGrow:0,done:false,col:PCOLS[flowers.length%PCOLS.length]});}
+  if(flowers.length===0)addFlower();
+  function draw(){
+    ctx.clearRect(0,0,280,200);
+    const sky=ctx.createLinearGradient(0,0,0,200);sky.addColorStop(0,'#e8f5e9');sky.addColorStop(1,'#c8e6c9');ctx.fillStyle=sky;ctx.fillRect(0,0,280,200);
+    // ground
+    ctx.fillStyle='#8d6e63';ctx.fillRect(0,175,280,25);ctx.fillStyle='#a5d6a7';ctx.fillRect(0,172,280,8);
+    flowers.forEach(f=>{
+      // stem
+      ctx.strokeStyle='#388E3C';ctx.lineWidth=3;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(f.x,176);ctx.lineTo(f.x,176-f.stemH);ctx.stroke();
+      // petals
+      if(f.petalGrow>0){
+        for(let i=0;i<6;i++){const a=i*(Math.PI/3),pr=f.petalGrow*12;ctx.fillStyle=f.col;ctx.globalAlpha=.85;ctx.beginPath();ctx.ellipse(f.x+Math.cos(a)*pr,176-f.stemH+Math.sin(a)*pr,f.petalGrow*5,f.petalGrow*3,a,0,Math.PI*2);ctx.fill();}
+        ctx.globalAlpha=1;ctx.fillStyle='#F5E03C';ctx.beginPath();ctx.arc(f.x,176-f.stemH,f.petalGrow*4,0,Math.PI*2);ctx.fill();
+      }
+    });
+    t++;
+  }
+  (function loop(){
+    regRaf(requestAnimationFrame(loop));
+    const cur=flowers[flowers.length-1];
+    if(cur&&!cur.done){
+      if(blow&&cur.stemH<80)cur.stemH=Math.min(80,cur.stemH+.6);
+      if(!blow&&cur.stemH>=80&&cur.petalGrow<1)cur.petalGrow=Math.min(1,cur.petalGrow+.015);
+      if(cur.petalGrow>=1){cur.done=true;if(flowers.length<6)setTimeout(addFlower,800);tone(523+flowers.length*100,'sine',.08,.35);}
+    }
+    draw();
+  })();
+  startMic(rms=>{
+    blow=rms>.012;
+    setMicSt('gd-ms',blow,blow?'Breathing! 🌬':'Breathe slowly…');
+    const l=document.getElementById('gd-lbl');const cur=flowers[flowers.length-1];
+    if(l)l.textContent=cur&&!cur.done?(cur.stemH<80?'Breathe out — grow the stem! 🌿':'Stop and watch the petals open! 🌸'):(flowers.length>=6?'Your garden is full! 🌸 Keep breathing':'Breathe to grow the next flower!');
+  },()=>setMicSt('gd-ms',false,'No mic — tap the canvas to grow!'));
+  cv.addEventListener('pointerdown',()=>{blow=true;setTimeout(()=>{blow=false;},600);});
+}
+
+function buildHeart(body){
+  let beats=[],lastTap=0,bpm=0,tapCount=0;
+  body.innerHTML=`
+    <p class="act-inst">Put your hand on your heart… tap the screen each time you feel it beat 🫀</p>
+    <canvas id="ht-cv" width="220" height="200" style="border-radius:16px;background:#fff5f5;cursor:pointer;"></canvas>
+    <div class="act-lbl" id="ht-lbl">Tap your heartbeat 🫀</div>`;
+  const cv=document.getElementById('ht-cv'),ctx=cv.getContext('2d');
+  let pulse=0,t=0;
+  cv.addEventListener('pointerdown',e=>{
+    e.preventDefault();const now=Date.now(),gap=now-lastTap;
+    if(gap>200&&gap<2200){bpm=Math.round(60000/gap);beats.push(now);if(beats.length>8)beats.shift();}
+    lastTap=now;pulse=1;tapCount++;
+    tone(80,'sine',.18,.15);tone(60,'sine',.14,.25);
+    const l=document.getElementById('ht-lbl');if(l)l.textContent=tapCount<3?'Keep tapping your heartbeat…':bpm>0?`Your heart: ~${bpm} bpm 🫀`:'Feel it beat… it\'s always there 🫀';
+  },{passive:false});
+  function drawHeart(x,y,sz,col,a){
+    ctx.save();ctx.globalAlpha=a;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(x,y+sz*.3);ctx.bezierCurveTo(x,y,x-sz*.5,y,x-sz*.5,y+sz*.3);ctx.bezierCurveTo(x-sz*.5,y+sz*.7,x,y+sz,x,y+sz);ctx.bezierCurveTo(x,y+sz,x+sz*.5,y+sz*.7,x+sz*.5,y+sz*.3);ctx.bezierCurveTo(x+sz*.5,y,x,y,x,y+sz*.3);ctx.fill();ctx.restore();
+  }
+  (function loop(){
+    regRaf(requestAnimationFrame(loop));t++;pulse=Math.max(0,pulse-.05);
+    ctx.clearRect(0,0,220,200);ctx.fillStyle='#fff5f5';ctx.fillRect(0,0,220,200);
+    if(beats.length>1){ctx.beginPath();ctx.strokeStyle='rgba(220,50,50,.35)';ctx.lineWidth=2;const now=Date.now();for(let x=0;x<200;x++){const tAgo=(200-x)*14,time=now-tAgo;let y2=162;beats.forEach(b=>{const d=Math.abs(time-b);if(d<200){const ph=d/200*Math.PI;y2-=Math.sin(ph)*28*Math.exp(-d/100);}});x===0?ctx.moveTo(x+10,y2):ctx.lineTo(x+10,y2);}ctx.stroke();}
+    const sz=45+pulse*20;drawHeart(110-sz/2,52-sz*.3,sz,'#E24B4A',.9);if(pulse>.3)drawHeart(110-sz/2*1.35,52-sz*.3*1.35,sz*1.35,'#E24B4A',pulse*.28);
+  })();
+}
+
+function buildJar(body){
+  let stars=[];try{stars=JSON.parse(localStorage.getItem('bloop-jar')||'[]');}catch(e){}
+  let floats=stars.map(s=>({x:55+Math.random()*110,y:90+Math.random()*70,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.18,label:s,ph:Math.random()*Math.PI*2}));
+  body.innerHTML=`
+    <p class="act-inst">Tap the jar to add a star — name a person, place, or thing that feels safe</p>
+    <canvas id="jr-cv" width="220" height="220" style="border-radius:16px;background:#FFFDF5;cursor:pointer;"></canvas>
+    <div class="act-lbl" id="jr-lbl">${stars.length>0?`${stars.length} star${stars.length>1?'s':''} in your jar ⭐`:'Tap the jar to add your first star!'}</div>`;
+  const cv=document.getElementById('jr-cv'),ctx=cv.getContext('2d');
+  cv.addEventListener('pointerdown',e=>{
+    e.preventDefault();openInputOverlay('What or who is this star for?',val=>{
+      if(val){stars.push(val);try{localStorage.setItem('bloop-jar',JSON.stringify(stars));}catch(e){}
+        floats.push({x:60+Math.random()*100,y:50+Math.random()*30,vx:(Math.random()-.5)*.25,vy:.5+Math.random()*.4,label:val,ph:0});
+        tone(880,'sine',.08,.35);tone(1100,'sine',.06,.3);
+        const l=document.getElementById('jr-lbl');if(l)l.textContent=`${stars.length} star${stars.length>1?'s':''} in your jar ⭐`;}
+    });
+  },{passive:false});
+  let t=0;
+  (function loop(){
+    regRaf(requestAnimationFrame(loop));t++;
+    ctx.clearRect(0,0,220,220);ctx.fillStyle='#FFFDF5';ctx.fillRect(0,0,220,220);
+    const grd=ctx.createRadialGradient(110,150,5,110,150,95);grd.addColorStop(0,`rgba(255,220,80,${.03+floats.length*.008})`);grd.addColorStop(1,'transparent');ctx.fillStyle=grd;ctx.fillRect(0,0,220,220);
+    // jar
+    ctx.fillStyle='rgba(200,230,255,.22)';ctx.strokeStyle='rgba(100,160,220,.55)';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(62,78);ctx.lineTo(52,200);ctx.lineTo(168,200);ctx.lineTo(158,78);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='rgba(155,195,225,.38)';ctx.strokeStyle='rgba(100,160,220,.65)';ctx.lineWidth=2;ctx.beginPath();ctx.rect(58,66,104,16);ctx.fill();ctx.stroke();ctx.beginPath();ctx.rect(74,56,72,12);ctx.fill();ctx.stroke();
+    floats.forEach(f=>{f.ph+=.018;f.y+=f.vy*.28;f.x+=f.vx;f.vx*=.997;f.vy*=.997;f.y=Math.max(90,Math.min(184,f.y));f.x=Math.max(58,Math.min(162,f.x));
+      ctx.fillStyle=`hsl(${40+Math.sin(f.ph)*20},100%,58%)`;ctx.font='bold 15px Nunito,sans-serif';ctx.textAlign='center';ctx.globalAlpha=.92;ctx.fillText('⭐',f.x,f.y);ctx.globalAlpha=1;
+      if(f.label){ctx.fillStyle='rgba(44,44,42,.55)';ctx.font='600 8px Nunito,sans-serif';ctx.fillText(f.label.substring(0,9),f.x,f.y+12);}
+    });
+    ctx.fillStyle='rgba(255,255,255,.2)';ctx.beginPath();ctx.ellipse(82,135,7,32,Math.PI*.08,0,Math.PI*2);ctx.fill();
+  })();
+}
+
+// ── INPUT OVERLAY ─────────────────────────────
+let inputCb=null;
+function openInputOverlay(prompt,cb){inputCb=cb;document.getElementById('input-q').textContent=prompt;document.getElementById('input-field').value='';document.getElementById('input-overlay').classList.add('open');setTimeout(()=>document.getElementById('input-field').focus(),300);}
+function cancelInput(){document.getElementById('input-overlay').classList.remove('open');if(inputCb)inputCb(null);inputCb=null;}
+function submitInput(){const v=document.getElementById('input-field').value.trim();document.getElementById('input-overlay').classList.remove('open');if(inputCb)inputCb(v||null);inputCb=null;}
+document.getElementById('input-field').addEventListener('keydown',e=>{if(e.key==='Enter')submitInput();if(e.key==='Escape')cancelInput();});
+
+// ── TREE (ventral) ────────────────────────────
+function buildTree(body){
+  let treeMotion=0,leaves=[],t=0,swayH=[],cycleCount=0,lastDir=0,canCycle=true;
+  let prevL=null,prevR=null;
+  body.innerHTML=`
+    <p class="act-inst">Sway slowly left… then right… the tree sways with you 🌳</p>
+    <canvas id="tr-cv" width="280" height="200" style="border-radius:16px;background:#F0FBF6;"></canvas>
+    <div class="act-lbl" id="tr-lbl">Sway slowly… like a tree in the breeze 🌿</div>
+    <div class="mstat off" id="tr-ms">Starting camera…</div>
+    <div class="prog-dots" id="tr-dots">${Array(10).fill('<div class="pdot"></div>').join('')}</div>`;
+  const cv=document.getElementById('tr-cv'),ctx=cv.getContext('2d');
+  function spawnLeaves(n){for(let i=0;i<n;i++)leaves.push({x:140+(-28+Math.random()*56),y:54,vx:(Math.random()-.5)*2.5,vy:-1-Math.random()*1.5,rot:Math.random()*360,vrot:(Math.random()-.5)*10,size:5+Math.random()*8,color:`hsl(${95+Math.random()*50},${55+Math.random()*25}%,${38+Math.random()*22}%)`,life:1});}
+  function swayCycle(dir){
+    if(dir===lastDir||!canCycle)return;lastDir=dir;cycleCount++;canCycle=false;setTimeout(()=>{canCycle=true;},850);
+    spawnLeaves(5+cycleCount*1.5);
+    const dots=document.querySelectorAll('#act-body .pdot');dots.forEach((d,i)=>d.classList.toggle('done',i<Math.min(cycleCount,10)));
+    if(cycleCount>=10){cycleCount=0;tone(523,'sine',.08,.4);const l=document.getElementById('tr-lbl');if(l)l.textContent='Beautiful! Keep swaying 🌿';}
+    else{const phrases=['Sway with it… 🌿','And back the other way…','Slowly… slowly…','Keep going…','Beautiful!','Other side now…','Almost there…','So gentle 🌿','One more…','Yes! 🌳'];const l=document.getElementById('tr-lbl');if(l)l.textContent=phrases[Math.min(cycleCount-1,9)];}
+  }
+  function draw(){
+    ctx.clearRect(0,0,280,200);ctx.fillStyle='#F0FBF6';ctx.fillRect(0,0,280,200);
+    const sw=treeMotion*14*Math.sin(t*0.03);
+    ctx.strokeStyle='#5D4037';ctx.lineWidth=9;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(140,190);ctx.lineTo(140+sw*0.3,108);ctx.stroke();
+    const cx=140+sw;[[cx,52,52,'#2E7D32'],[cx-23,60,36,'#388E3C'],[cx+23,60,36,'#43A047']].forEach(([x,y,r,c])=>{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();});
+    leaves=leaves.filter(l=>l.life>.04);leaves.forEach(l=>{l.x+=l.vx;l.y+=l.vy;l.vy+=.035;l.vx*=.99;l.rot+=l.vrot;l.life-=.007;ctx.save();ctx.translate(l.x,l.y);ctx.rotate(l.rot*Math.PI/180);ctx.globalAlpha=l.life;ctx.fillStyle=l.color;ctx.beginPath();ctx.ellipse(0,0,l.size,l.size*.55,0,0,Math.PI*2);ctx.fill();ctx.restore();});
+    ctx.globalAlpha=1;t++;
+  }
+  (function loop(){regRaf(requestAnimationFrame(loop));if(treeMotion>0)treeMotion=Math.max(0,treeMotion-.008);draw();})();
+  const inIframe=()=>{try{return window.self!==window.top;}catch(e){return true;}};
+  // tap fallback always wired
+  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();const x=(e.clientX-r.left)*(280/r.width);treeMotion=.8;swayCycle(x<140?-1:1);});
+  if(!inIframe()&&navigator.mediaDevices?.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:80,height:60},audio:false}).then(stream=>{
+      camStream=stream;const vid=document.createElement('video');vid.srcObject=stream;vid.autoplay=true;vid.muted=true;vid.playsInline=true;vid.play();
+      const ms=document.getElementById('tr-ms');if(ms){ms.className='mstat on';ms.textContent='Camera on — sway your body 🌳';}
+      const oc=document.createElement('canvas');oc.width=40;oc.height=30;const octx=oc.getContext('2d');
+      function camLoop(){if(!camStream)return;octx.drawImage(vid,0,0,40,30);const data=octx.getImageData(0,0,40,30).data;
+        let ls=0,rs=0;for(let y=0;y<30;y++)for(let x=0;x<40;x++){const idx=(y*40+x)*4;const lu=data[idx]*.299+data[idx+1]*.587+data[idx+2]*.114;if(x<20)ls+=lu;else rs+=lu;}
+        const la=ls/(20*30),ra=rs/(20*30);let shift=0;if(prevL!==null)shift=(la-prevL)-(ra-prevR);prevL=la;prevR=ra;
+        treeMotion=Math.min(1,treeMotion*.9+Math.abs(shift)*.05);
+        swayH.push(shift);if(swayH.length>20)swayH.shift();
+        const avg=swayH.reduce((a,b)=>a+b,0)/swayH.length;
+        const dir=avg>0.4?1:avg<-0.4?-1:0;if(dir!==0)swayCycle(dir);
+        setTimeout(camLoop,100);}
+      vid.onloadedmetadata=()=>camLoop();
+    }).catch(()=>{const ms=document.getElementById('tr-ms');if(ms){ms.className='mstat off';ms.textContent='Camera blocked — tap canvas to sway!'}});
+  } else {
+    const ms=document.getElementById('tr-ms');if(ms){ms.className='mstat off';ms.textContent='Tap left or right side to sway the tree!';}
+  }
+}
+
+// ── SAFETY BUTTON ─────────────────────────────
+let safPhase=0,safTimer=null;
+const SAF_PHASES=[
+  {label:'Breathe in slowly…',emoji:'🌬',dur:4000,scale:1.4,barDir:1},
+  {label:'Hold…',             emoji:'🤫',dur:2000,scale:1.4,barDir:0},
+  {label:'Breathe out…',      emoji:'😮', dur:5000,scale:1.0,barDir:-1},
+];
+
+function openSafety(){
+  document.getElementById('safety-overlay').classList.add('open');
+  safPhase=0;runSafBreath();
+}
+function closeSafety(){
+  document.getElementById('safety-overlay').classList.remove('open');
+  if(safTimer)clearTimeout(safTimer);
+}
+function runSafBreath(){
+  if(safTimer)clearTimeout(safTimer);
+  const p=SAF_PHASES[safPhase];
+  const ring=document.getElementById('saf-ring');
+  const lbl=document.getElementById('saf-ring-label');
+  const bar=document.getElementById('saf-bar');
+  if(!ring)return;
+  lbl.textContent=p.label;
+  ring.textContent=p.emoji;
+  ring.style.transform=`scale(${p.scale})`;
+  // animate progress bar
+  bar.style.transition='none';
+  bar.style.width=safPhase===0?'0%':safPhase===1?'100%':'100%';
+  requestAnimationFrame(()=>{
+    bar.style.transition=`width ${p.dur}ms linear`;
+    bar.style.width=safPhase===0?'100%':safPhase===1?'100%':'0%';
+  });
+  safTimer=setTimeout(()=>{
+    safPhase=(safPhase+1)%SAF_PHASES.length;
+    runSafBreath();
+  },p.dur);
+}
+
+</script>
+
+<!-- SAFETY BUTTON (always visible) -->
+<button id="safe-btn" onclick="openSafety()">🆘 <span>Need help?</span></button>
+
+<!-- SAFETY OVERLAY -->
+<div id="safety-overlay">
+  <div id="safety-card">
+    <button id="safety-close" onclick="closeSafety()">Close ✕</button>
+    <div class="saf-title">🫧 You are safe</div>
+    <div class="saf-sub">This is a calm place. Breathe with the circle, or call someone who can help.</div>
+
+    <!-- Breathing circle -->
+    <div id="saf-breath-wrap">
+      <div id="saf-ring">🌬</div>
+      <div id="saf-progress"><div id="saf-bar"></div></div>
+      <div id="saf-ring-label">Breathe in slowly…</div>
+    </div>
+
+    <div class="saf-divider"></div>
+    <div style="font-size:12px;font-weight:800;color:#888;letter-spacing:.05em;text-transform:uppercase;">If you need someone to talk to</div>
+
+    <div class="help-row">
+      <div><div class="help-name">Befrienders KL</div><div class="help-desc">24 hours · emotional support</div></div>
+      <a class="help-call" href="tel:0376272929">03-7627 2929</a>
+    </div>
+    <div class="help-row">
+      <div><div class="help-name">Mental Health Helpline</div><div class="help-desc">Psychosocial support</div></div>
+      <a class="help-call" href="tel:0329359935">03-2935 9935</a>
+    </div>
+    <div class="help-row">
+      <div><div class="help-name">MIASA</div><div class="help-desc">Mental illness support</div></div>
+      <a class="help-call" href="tel:0327806803">03-2780 6803</a>
+    </div>
+    <div class="help-row">
+      <div><div class="help-name">Emergency</div><div class="help-desc">Police / ambulance</div></div>
+      <a class="help-call" href="tel:999" style="background:#FFEBEE;color:#c0392b;">999</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
