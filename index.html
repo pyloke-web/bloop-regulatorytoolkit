@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Bloop 🫧 — My Toolkit</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100%;background:#E8F4FD;font-family:'Nunito',sans-serif;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;}
@@ -15,14 +16,15 @@ html,body{width:100%;height:100%;background:#E8F4FD;font-family:'Nunito',sans-se
 .logo em{color:#378ADD;font-style:normal;}
 #topbar-sub{font-size:12px;font-weight:800;color:#1a3a5c;opacity:.7;}
 
-#zone-tabs{display:flex;padding:12px 14px 0;gap:6px;background:#E8F4FD;border-bottom:none;flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+#zone-tabs{display:flex;padding:10px 12px 12px;gap:8px;background:#E8F4FD;border-bottom:2px solid rgba(0,0,0,.07);flex-shrink:0;}
 #zone-tabs::-webkit-scrollbar{display:none;}
-.ztab{padding:10px 14px;border-radius:18px 18px 0 0;font-size:12px;font-weight:900;cursor:pointer;text-align:center;border:none;background:rgba(255,255,255,.6);color:#888;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;line-height:1.3;transition:background .2s,color .2s;border:2px solid transparent;border-bottom:none;}
-.ztab.on.symp{background:#FFEDE8;color:#c0392b;border:2px solid #FF8C7A;border-bottom:none;}
-.ztab.on.dors{background:#E0F0FF;color:#1565C0;border:2px solid #5BA4E8;border-bottom:none;}
-.ztab.on.vent{background:#E0F7EE;color:#0a6e4a;border:2px solid #4DC9A0;border-bottom:none;}
+.ztab{flex:1;padding:11px 6px;border-radius:50px;font-size:12px;font-weight:900;cursor:pointer;text-align:center;background:rgba(255,255,255,.65);color:#aaa;border:2px solid rgba(0,0,0,.08);white-space:nowrap;-webkit-tap-highlight-color:transparent;line-height:1.3;transition:all .18s;box-shadow:0 2px 0 rgba(0,0,0,.06);}
+.ztab:active{transform:scale(.95);}
+.ztab.on.symp{background:#FFEDE8;color:#c0392b;border-color:#FF8C7A;box-shadow:0 3px 0 rgba(255,140,122,.3);}
+.ztab.on.dors{background:#E0F0FF;color:#1565C0;border-color:#5BA4E8;box-shadow:0 3px 0 rgba(91,164,232,.3);}
+.ztab.on.vent{background:#E0F7EE;color:#0a6e4a;border-color:#4DC9A0;box-shadow:0 3px 0 rgba(77,201,160,.3);}
 
-#tool-scroll{flex:1;overflow-y:auto;padding:14px 14px 24px;-webkit-overflow-scrolling:touch;background:#E8F4FD;}
+#tool-scroll{flex:1;overflow-y:auto;padding:14px 14px 120px;-webkit-overflow-scrolling:touch;background:#E8F4FD;}
 #tool-scroll::-webkit-scrollbar{width:3px;}
 #tool-scroll::-webkit-scrollbar-thumb{background:#EDE8E2;border-radius:2px;}
 .zone-label{font-size:13px;font-weight:900;color:#1a3a5c;margin-bottom:12px;letter-spacing:.02em;background:rgba(255,255,255,.6);padding:8px 14px;border-radius:14px;display:inline-block;}
@@ -50,7 +52,7 @@ html,body{width:100%;height:100%;background:#E8F4FD;font-family:'Nunito',sans-se
 #act-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 16px 0;gap:12px;overflow:hidden;}
 
 /* Exit button — always floating at bottom */
-#exit-wrap{padding:12px 16px 20px;background:transparent;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;}
+#exit-wrap{padding:12px 16px 80px;background:transparent;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;}
 #exit-btn{background:#fff;border:3px solid #A8D4F5;border-radius:32px;padding:13px 36px;font-size:15px;font-weight:900;color:#1565C0;cursor:pointer;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;transition:background .15s,border-color .15s;box-shadow:0 4px 0 rgba(90,164,232,.3);}
 #exit-btn:active{background:#F1EFE8;}
 
@@ -127,6 +129,29 @@ html,body{width:100%;height:100%;background:#E8F4FD;font-family:'Nunito',sans-se
 .help-call{font-size:13px;font-weight:900;color:#1565C0;text-decoration:none;background:#DDEFFF;padding:7px 12px;border-radius:12px;}
 .saf-divider{height:1px;background:#EDE8E2;}
 
+/* BLOOP BUDDY */
+#buddy-wrap{
+  position:fixed;bottom:20px;left:14px;
+  width:60px;
+  z-index:65;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+#buddy-wrap.hidden{display:none;}
+#buddy-cv{width:56px;height:56px;display:block;}
+#buddy-label{font-size:9px;font-weight:900;color:#1a3a5c;text-align:center;letter-spacing:.01em;}
+#buddy-bubble{
+  display:none;position:absolute;
+  bottom:calc(100% + 10px);left:0;
+  background:#fff;border:2.5px solid #A8D4F5;
+  border-radius:16px 16px 16px 4px;
+  padding:8px 12px;font-size:11px;font-weight:800;color:#1a3a5c;
+  white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.12);
+  z-index:100;pointer-events:none;
+}
+#buddy-bubble.show{display:block;animation:bubblePop .18s ease-out;}
+@keyframes bubblePop{from{transform:scale(.65) translateY(4px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+
 /* BREATHING CIRCLE in safety */
 #saf-breath-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;}
 #saf-ring{
@@ -188,6 +213,13 @@ html,body{width:100%;height:100%;background:#E8F4FD;font-family:'Nunito',sans-se
   </div>
 </div>
 
+<!-- BLOOP BUDDY (always visible, bottom-left) -->
+<div id="buddy-wrap" onclick="buddyTap()">
+  <canvas id="buddy-cv" width="112" height="112"></canvas>
+  <div id="buddy-label">bloop</div>
+  <div id="buddy-bubble"></div>
+</div>
+
 <script>
 // ── TOOL REGISTRY ─────────────────────────────
 const ZONES = {
@@ -203,11 +235,10 @@ const ZONES = {
   },
   dors:{
     tools:[
-      {id:'bee',       icon:'🐝',  name:'Bee hum',        sub:'Hum to help the bee fly',         tag:'mic'},
-      {id:'star',      icon:'🌟',  name:'Star wake-up',   sub:'Hum to light the star',           tag:'mic'},
+      {id:'star',      icon:'🌅',  name:'Sunrise',        sub:'Hold to breathe in, release to breathe out', tag:'touch'},
       {id:'drum',      icon:'🥁',  name:'Drum tap',       sub:'Tap a beat — wake up your body',  tag:'tap'},
       {id:'butterfly', icon:'🦋',  name:'Butterfly tap',  sub:'Left, right, left, right…',       tag:'tap'},
-      {id:'finger',    icon:'🖐',  name:'Finger breathing',sub:'Trace up and down each finger',  tag:'touch'},
+      {id:'finger',    icon:'🌬',  name:'Breath pacer',   sub:'Follow the circle — breathe with me', tag:'watch'},
       {id:'wave',      icon:'🌊',  name:'Wave maker',     sub:'Tap a rhythm, make waves',        tag:'tap'},
     ]
   },
@@ -246,22 +277,24 @@ showZone('symp');
 // ── ACTIVITY OPEN/CLOSE ───────────────────────
 const titles={
   candle:'Candle breath 🕯️',bubbles:'Bubble maker 🫧',dragon:'Dragon breath 🐉',pinwheel:'Pinwheel 🌀',balloon:'Balloon blow 🎈',shake:'Shake it out 🫨',
-  bee:'Bee hum 🐝',star:'Star wake-up 🌟',drum:'Drum tap 🥁',butterfly:'Butterfly tap 🦋',finger:'Finger breathing 🖐',wave:'Wave maker 🌊',
+  star:'Sunrise 🌅',drum:'Drum tap 🥁',butterfly:'Butterfly tap 🦋',finger:'Breath pacer 🌬',wave:'Wave maker 🌊',
   rainbow:'Rainbow trace 🌈',lava:'Lava lamp 🫙',garden:'Grow a garden 🌱',heart:'Heartbeat 🫀',jar:'Safe place jar ⭐',tree:'Sway tree 🌳'
 };
 
 function openActivity(tool){
   stopAll();
   document.getElementById('act-overlay').classList.add('open');
+  document.getElementById('buddy-wrap').classList.add('hidden');
   document.getElementById('act-title-txt').textContent=titles[tool.id]||tool.name;
   const body=document.getElementById('act-body');
   body.innerHTML='';
   const builders={
     candle:buildCandle,bubbles:buildBubbles,dragon:buildDragon,pinwheel:buildPinwheel,balloon:buildBalloon,shake:buildShake,
-    bee:buildBee,star:buildStar,drum:buildDrum,butterfly:buildButterfly,finger:buildFinger,wave:buildWave,
+    star:buildStar,drum:buildDrum,butterfly:buildButterfly,finger:buildFinger,wave:buildWave,
     rainbow:buildRainbow,lava:buildLava,garden:buildGarden,heart:buildHeart,jar:buildJar,tree:buildTree
   };
   if(builders[tool.id]) builders[tool.id](body);
+  if(typeof buddyNotify==='function') buddyNotify(tool.id);
 }
 
 function exitPrompt(){
@@ -287,6 +320,7 @@ function exitPrompt(){
 function closeCheckin(){
   document.getElementById('checkin-overlay').classList.remove('open');
   document.getElementById('act-overlay').classList.remove('open');
+  document.getElementById('buddy-wrap').classList.remove('hidden');
   stopAll();
 }
 
@@ -334,6 +368,26 @@ function drumSound(vol=0.4){
 // Mic status helper
 function micEl(id){return document.getElementById(id);}
 function setMicSt(id,on,text){const el=micEl(id);if(el){el.className='mstat '+(on?'on':'off');el.textContent=text;}}
+
+// Hum detector using zero-crossing rate on raw time-domain samples.
+// A hum is a periodic wave → low ZCR. Blowing is broadband noise → high ZCR.
+// This works even when mobile OS audio processing ignores our mic constraints.
+function detectHum(){
+  if(!analyser)return false;
+  const td=new Uint8Array(analyser.fftSize);
+  analyser.getByteTimeDomainData(td);
+  let rmsSum=0,crossings=0;
+  for(let i=0;i<td.length;i++){
+    const v=(td[i]-128)/128;
+    rmsSum+=v*v;
+    if(i>0&&(td[i]>=128)!==(td[i-1]>=128))crossings++;
+  }
+  const rms=Math.sqrt(rmsSum/td.length);
+  const zcr=crossings/td.length;
+  // Hum: enough amplitude + periodic (low ZCR)
+  // Blow: high amplitude + noisy (high ZCR)
+  return rms>0.01&&zcr<0.15;
+}
 
 // ═══════════════════════════════════════════
 // ⚡ SYMPATHETIC TOOLS
@@ -587,9 +641,9 @@ function buildShake(body){
 // ═══════════════════════════════════════════
 
 function buildBee(body){
-  let fill=0,hum=false;
+  let fill=0,holding=false,beeFrame=0,beeBucket=-1;
   body.innerHTML=`
-    <p class="act-inst">Make a long mmmmmm sound — help the bee fly higher and higher!</p>
+    <p class="act-inst">Hold the bee and hum mmmm — feel the buzz in your chest as it flies!</p>
     <div id="bee-w" style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
       <div style="height:160px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
         <svg id="bee-s" width="120" height="110" viewBox="0 0 120 110" style="transform:translateY(55px);transition:transform .4s ease-out;">
@@ -604,15 +658,23 @@ function buildBee(body){
           <ellipse id="bee-wr" cx="76" cy="54" rx="17" ry="9" fill="rgba(200,230,255,.8)" stroke="#9FE1CB" stroke-width="1.2" transform="rotate(18,76,54)"/>
         </svg>
       </div>
-      <div class="act-lbl" id="bee-l">Hum or tap to help it fly! 🐝</div>
+      <div class="act-lbl" id="bee-l">Hold here and hum! 🐝</div>
       <div class="mic-bar"><div id="bee-f" class="mic-fill" style="background:#EF9F27;"></div></div>
-    </div>
-    <div class="mstat off" id="bee-ms">Starting mic…</div>`;
-  const w=document.getElementById('bee-w');w.addEventListener('pointerdown',e=>{e.preventDefault();fill=Math.min(100,fill+10);updateBee();},{passive:false});
+    </div>`;
+  const w=document.getElementById('bee-w');
+  w.addEventListener('pointerdown',e=>{e.preventDefault();holding=true;},{passive:false});
+  w.addEventListener('pointerup',()=>{holding=false;});
+  w.addEventListener('pointerleave',()=>{holding=false;});
+  w.addEventListener('touchend',()=>{holding=false;});
   (function loop(){
     regRaf(requestAnimationFrame(loop));
-    if(hum)fill=Math.min(100,fill+2.2);else fill=Math.max(0,fill-.3);
-    // reset when full for endless loop
+    beeFrame++;
+    if(holding){
+      fill=Math.min(100,fill+2.2);
+      if(beeFrame%10===0)tone(190+Math.random()*25,'sawtooth',.065,.14);
+    }else{
+      fill=Math.max(0,fill-.3);
+    }
     if(fill>=99){fill=0;tone(880,'sine',.08,.3);tone(1100,'sine',.06,.25);}
     updateBee();
   })();
@@ -621,52 +683,73 @@ function buildBee(body){
     if(!s)return;
     s.style.transform=`translateY(${55-(fill/100)*65}px)`;
     if(bar)bar.style.width=fill+'%';
-    if(wl&&wr){const fly=hum&&fill>5;wl.style.animation=fly?'wfp .12s ease-in-out infinite':'none';wr.style.animation=fly?'wfp .12s ease-in-out infinite .06s':'none';}
-    if(l)l.textContent=fill<10?'Hum or tap! 🐝':fill<50?'Keep humming! Bzzz!':fill<80?'It\'s flying! 🐝':fill<99?'So high! Bzzzz! ✨':'Again! 🎉';
+    if(wl&&wr){const fly=holding&&fill>5;wl.style.animation=fly?'wfp .12s ease-in-out infinite':'none';wr.style.animation=fly?'wfp .12s ease-in-out infinite .06s':'none';}
+    const bkt=fill<30?0:fill<70?1:fill<99?2:3;
+    if(bkt!==beeBucket){beeBucket=bkt;if(l){const m=['Hold and hum mmmm 🐝','Feel the buzz in your chest!','Flying high! Bzzzz! 🌟','Again! 🎉'];l.textContent=m[bkt];}}
   }
-  // Sustained hum detection: must be above threshold for 8+ consecutive frames
-  let beeSustain=0;
-  startMic(rms=>{
-    if(rms>0.018) beeSustain=Math.min(12,beeSustain+1);
-    else beeSustain=Math.max(0,beeSustain-2);
-    hum=(beeSustain>=8);
-    setMicSt('bee-ms',hum,hum?'Humming! Bzzzz 🐝':'Keep humming steadily… mmmm');
-  },()=>setMicSt('bee-ms',false,'No mic — tap the bee!'));
 }
 const wfpStyle=document.createElement('style');wfpStyle.textContent='@keyframes wfp{0%,100%{transform:scaleY(1) rotate(-18deg);}50%{transform:scaleY(.2) rotate(-30deg);}} @keyframes doneFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}';document.head.appendChild(wfpStyle);
 
 function buildStar(body){
-  let brightness=0,hum=false;
+  let b=0,holding=false,t=0,lastLbl='';
   body.innerHTML=`
-    <p class="act-inst">Hum mmmmm… watch the star wake up and shine!</p>
-    <canvas id="st-cv" width="220" height="220" style="border-radius:16px;background:#08031a;"></canvas>
-    <div class="act-lbl" id="st-lbl">Hum to wake the star… ✨</div>
-    <div class="mstat off" id="st-ms">Starting mic…</div>`;
+    <p class="act-inst">Hold as you breathe in — release as you breathe out</p>
+    <canvas id="st-cv" width="220" height="220" style="border-radius:16px;cursor:pointer;"></canvas>
+    <div class="act-lbl" id="st-lbl">Hold here and breathe in… 🌅</div>`;
   const cv=document.getElementById('st-cv'),ctx=cv.getContext('2d');
-  let t=0,rays=Array(8).fill(0).map((_,i)=>({a:i*Math.PI/4,len:0}));
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();holding=true;},{passive:false});
+  cv.addEventListener('pointerup',()=>{holding=false;});
+  cv.addEventListener('pointerleave',()=>{holding=false;});
+  cv.addEventListener('touchend',()=>{holding=false;});
+  const STARS=[[28,30],[85,18],[155,28],[195,12],[50,65],[175,52],[108,8],[140,42],[60,42],[170,30]];
   function draw(){
-    ctx.fillStyle=`rgba(8,3,26,.2)`;ctx.fillRect(0,0,220,220);t++;
-    const sz=18+brightness*55;
-    const grd=ctx.createRadialGradient(110,110,0,110,110,sz*2.5);
-    grd.addColorStop(0,`rgba(255,220,80,${brightness*.55})`);grd.addColorStop(.5,`rgba(200,160,255,${brightness*.2})`);grd.addColorStop(1,'transparent');
-    ctx.fillStyle=grd;ctx.beginPath();ctx.arc(110,110,sz*2.5,0,Math.PI*2);ctx.fill();
-    rays.forEach(r=>{r.len+=(brightness*45-r.len)*.1;const rx=Math.cos(r.a+t*.012),ry=Math.sin(r.a+t*.012);ctx.beginPath();ctx.moveTo(110+rx*sz*.8,110+ry*sz*.8);ctx.lineTo(110+rx*(sz*.8+r.len),110+ry*(sz*.8+r.len));ctx.strokeStyle=`rgba(255,220,80,${brightness*.7})`;ctx.lineWidth=2;ctx.stroke();});
-    ctx.fillStyle=`rgb(${Math.round(60+brightness*195)},${Math.round(50+brightness*170)},${Math.round(10+brightness*50)})`;
-    ctx.beginPath();for(let i=0;i<10;i++){const a=i*Math.PI/5-Math.PI/2,r2=i%2===0?sz:sz*.38;i===0?ctx.moveTo(110+Math.cos(a)*r2,110+Math.sin(a)*r2):ctx.lineTo(110+Math.cos(a)*r2,110+Math.sin(a)*r2);}ctx.closePath();ctx.fill();
-    if(brightness>.8&&Math.random()<brightness*.4){ctx.fillStyle='rgba(255,255,200,.9)';ctx.beginPath();ctx.arc(110+(Math.random()-.5)*110,110+(Math.random()-.5)*110,Math.random()*2.5+1,0,Math.PI*2);ctx.fill();}
-    if(brightness<.15){ctx.fillStyle='rgba(150,130,200,.55)';ctx.font='bold 16px Nunito,sans-serif';ctx.textAlign='center';ctx.fillText('z',126,95);ctx.font='12px Nunito,sans-serif';ctx.fillText('z',136,83);}
-    if(brightness>=1){brightness=0;} // endless — reset and sleep again
+    t++;
+    const skyG=ctx.createLinearGradient(0,0,0,220);
+    skyG.addColorStop(0,`hsl(${220-b*150},${30+b*18}%,${8+b*28}%)`);
+    skyG.addColorStop(0.65,`hsl(${240-b*210},${18+b*38}%,${12+b*42}%)`);
+    skyG.addColorStop(1,`hsl(20,${14+b*32}%,${14+b*28}%)`);
+    ctx.fillStyle=skyG;ctx.fillRect(0,0,220,220);
+    if(b<0.8){
+      const sa=Math.max(0,(0.8-b)/0.8);
+      STARS.forEach(([sx,sy])=>{
+        ctx.fillStyle=`rgba(255,255,255,${sa*(0.35+Math.sin(t*.02+sx)*.22)})`;
+        ctx.beginPath();ctx.arc(sx,sy,1.4,0,Math.PI*2);ctx.fill();
+      });
+    }
+    const hy=152;
+    const gG=ctx.createLinearGradient(0,hy,0,220);
+    gG.addColorStop(0,`hsl(${20+b*10},${8+b*22}%,${10+b*18}%)`);
+    gG.addColorStop(1,`hsl(20,${6+b*12}%,${6+b*10}%)`);
+    ctx.fillStyle=gG;ctx.fillRect(0,hy,220,220-hy);
+    if(b>0.03){
+      const sunY=hy+22-b*85,sunR=16+b*14;
+      const glG=ctx.createRadialGradient(110,sunY,0,110,sunY,sunR*3.5);
+      glG.addColorStop(0,`rgba(255,${Math.round(180+b*60)},${Math.round(30+b*30)},${b*.45})`);
+      glG.addColorStop(0.5,`rgba(255,${Math.round(120+b*70)},20,${b*.18})`);
+      glG.addColorStop(1,'transparent');
+      ctx.fillStyle=glG;ctx.beginPath();ctx.arc(110,sunY,sunR*3.5,0,Math.PI*2);ctx.fill();
+      ctx.save();ctx.beginPath();ctx.rect(0,0,220,hy);ctx.clip();
+      ctx.fillStyle=`rgb(255,${Math.round(155+b*92)},${Math.round(18+b*82)})`;
+      ctx.beginPath();ctx.arc(110,sunY,sunR,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+      if(b>0.18){
+        const hG=ctx.createRadialGradient(110,hy,0,110,hy,75+b*55);
+        hG.addColorStop(0,`rgba(255,${Math.round(140+b*75)},40,${b*.32})`);
+        hG.addColorStop(1,'transparent');
+        ctx.fillStyle=hG;ctx.fillRect(0,hy-25,220,55);
+      }
+    }
   }
-  (function loop(){regRaf(requestAnimationFrame(loop));if(hum)brightness=Math.min(1,brightness+.022);else brightness=Math.max(0,brightness-.006);draw();})();
-  let starSustain=0;
-  startMic(rms=>{
-    if(rms>0.018) starSustain=Math.min(12,starSustain+1);
-    else starSustain=Math.max(0,starSustain-2);
-    hum=(starSustain>=8);
-    setMicSt('st-ms',hum,hum?'Humming! ✨':'Keep humming steadily… mmmm');
+  (function loop(){
+    regRaf(requestAnimationFrame(loop));
+    if(holding)b=Math.min(1,b+.005);else b=Math.max(0,b-.005);
+    draw();
+    const txt=holding
+      ?(b<0.5?'Breathe in… ☀️':'Keep breathing in… 🌅')
+      :(b>0.05?'Breathe out… 🌄':'Hold here and breathe in… 🌅');
     const l=document.getElementById('st-lbl');
-    if(l)l.textContent=brightness<.3?'Hum and wake it… ✨':brightness<.7?'It\'s waking up! 🌟':brightness<.99?'Almost awake! ⭐':'Again! Let it sleep and wake again 🌟';
-  },()=>setMicSt('st-ms',false,'No mic — watch it glow slowly'));
+    if(l&&txt!==lastLbl){lastLbl=txt;l.textContent=txt;}
+  })();
 }
 
 function buildDrum(body){
@@ -741,67 +824,46 @@ function buildButterfly(body){
 }
 
 function buildFinger(body){
-  let phase=0,finger=0,dir='up',tracing=false,fingerPts=[];
+  // Box breathing: 5s in, 5s hold, 5s out, 5s hold — regulates autonomic nervous system
+  const PHASES=[
+    {label:'Breathe in…',  frames:300, col:'#4DC9A0'},
+    {label:'Hold…',        frames:300, col:'#7F77DD'},
+    {label:'Breathe out…', frames:300, col:'#5BA4E8'},
+    {label:'Hold…',        frames:300, col:'#A8D4F5'},
+  ];
+  let phase=0,phaseT=0,cycles=0;
   body.innerHTML=`
-    <p class="act-inst">Trace up each finger (breathe in) and down (breathe out)</p>
-    <canvas id="fi-cv" width="260" height="240" style="border-radius:16px;background:#FFF9F4;touch-action:none;cursor:crosshair;"></canvas>
-    <div class="act-lbl" id="fi-lbl">Start at the bottom — trace up the first finger 🖐</div>`;
+    <p class="act-inst">Box breathing — in 5, hold 5, out 5, hold 5</p>
+    <canvas id="fi-cv" width="260" height="210" style="border-radius:16px;background:#EEF9F4;"></canvas>
+    <div class="act-lbl" id="fi-lbl">Breathe in…</div>
+    <div style="display:flex;justify-content:center;gap:12px;margin-top:6px;" id="fi-dots"></div>`;
   const cv=document.getElementById('fi-cv'),ctx=cv.getContext('2d');
-  // finger tip positions and base
-  const FINGERS=[{tip:[60,40],base:[55,170]},{tip:[95,22],base:[90,165]},{tip:[130,18],base:[125,162]},{tip:[162,26],base:[158,166]},{tip:[200,55],base:[195,170]}];
-  let highlight=0,progress=0,completedFingers=0;
-
-  function draw(){
-    ctx.clearRect(0,0,260,240);ctx.fillStyle='#FFF9F4';ctx.fillRect(0,0,260,240);
-    // hand outline (simple)
-    ctx.fillStyle='#FDEBD0';ctx.strokeStyle='#D4A870';ctx.lineWidth=2;
-    // palm
-    ctx.beginPath();ctx.ellipse(130,185,80,45,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // fingers
-    FINGERS.forEach((f,i)=>{
-      const w=i===4?16:18;
-      const done=i<completedFingers,cur=i===highlight;
-      ctx.fillStyle=done?'#A8D5A2':cur?'#FFE0B2':'#FDEBD0';
-      ctx.strokeStyle=done?'#4CAF50':cur?'#FF9800':'#D4A870';
-      ctx.lineWidth=2;
-      ctx.beginPath();ctx.moveTo(f.base[0]-w/2,f.base[1]);ctx.lineTo(f.tip[0]-w/2,f.tip[1]+8);
-      ctx.arc(f.tip[0],f.tip[1]+8,w/2,Math.PI,0);ctx.lineTo(f.base[0]+w/2,f.base[1]);ctx.closePath();ctx.fill();ctx.stroke();
-      // progress indicator on current finger
-      if(cur&&progress>0){
-        const px=f.base[0]+(f.tip[0]-f.base[0])*(dir==='up'?progress:1-progress);
-        const py=f.base[1]+(f.tip[1]-f.base[1])*(dir==='up'?progress:1-progress);
-        ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);ctx.fillStyle='rgba(255,140,0,.8)';ctx.fill();
-      }
-    });
-    // thumb label
-    ctx.fillStyle='#888780';ctx.font='bold 10px Nunito,sans-serif';ctx.textAlign='center';
-    ctx.fillText('breathe in ↑',130,10);ctx.fillText('breathe out ↓',130,235);
-  }
-
-  cv.addEventListener('pointerdown',e=>{e.preventDefault();tracing=true;handleMove(e);},{passive:false});
-  cv.addEventListener('pointermove',e=>{e.preventDefault();if(!tracing)return;handleMove(e);},{passive:false});
-  cv.addEventListener('pointerup',()=>{tracing=false;});
-  cv.addEventListener('touchstart',e=>{e.preventDefault();tracing=true;handleMove(e);},{passive:false});
-  cv.addEventListener('touchmove',e=>{e.preventDefault();if(!tracing)return;handleMove(e);},{passive:false});
-  cv.addEventListener('touchend',()=>{tracing=false;});
-
-  function handleMove(e){
-    const r=cv.getBoundingClientRect();
-    const x=((e.touches?e.touches[0].clientX:e.clientX)-r.left)*(260/r.width);
-    const y=((e.touches?e.touches[0].clientY:e.clientY)-r.top)*(240/r.height);
-    const f=FINGERS[highlight];
-    // track vertical progress
-    const totalH=f.base[1]-f.tip[1];
-    const relY=f.base[1]-y;
-    progress=Math.max(0,Math.min(1,relY/totalH));
-    // detect direction change
-    if(progress>.9&&dir==='up'){dir='down';const l=document.getElementById('fi-lbl');if(l)l.textContent='Breathe OUT — trace down ↓';}
-    if(progress<.1&&dir==='down'){dir='up';completedFingers++;highlight=Math.min(4,highlight+1);
-      if(highlight>4||completedFingers>=5){completedFingers=0;highlight=0;tone(523,'sine',.1,.3);const l=document.getElementById('fi-lbl');if(l)l.textContent='Beautiful! Start again whenever 🖐';}
-      else{const l=document.getElementById('fi-lbl');if(l)l.textContent=`Next finger — breathe in ↑ (${5-highlight} left)`;}}
-  }
-
-  (function loop(){regRaf(requestAnimationFrame(loop));draw();})();
+  const dotsEl=document.getElementById('fi-dots');
+  for(let i=0;i<5;i++){const d=document.createElement('div');d.style.cssText='width:11px;height:11px;border-radius:50%;background:rgba(77,201,160,.2);transition:background .4s;';dotsEl.appendChild(d);}
+  function refreshDots(){document.querySelectorAll('#fi-dots div').forEach((d,i)=>{d.style.background=i<cycles?'#4DC9A0':'rgba(77,201,160,.2)';});}
+  (function loop(){
+    regRaf(requestAnimationFrame(loop));
+    phaseT++;
+    const p=PHASES[phase];
+    const prog=phaseT/p.frames;
+    if(phaseT>=p.frames){
+      phaseT=0;
+      if(phase===3){cycles=Math.min(5,cycles+1);refreshDots();if(cycles===5)tone(523,'sine',.09,.4);}
+      phase=(phase+1)%4;
+      const l=document.getElementById('fi-lbl');
+      if(l)l.textContent=cycles>=5?'Beautiful breathing! 💙':PHASES[phase].label;
+    }
+    const r=phase===0?45+prog*50:phase===1?95:phase===2?95-prog*50:45;
+    ctx.clearRect(0,0,260,210);ctx.fillStyle='#EEF9F4';ctx.fillRect(0,0,260,210);
+    const glow=ctx.createRadialGradient(130,105,r*.4,130,105,r*1.9);
+    glow.addColorStop(0,p.col+'18');glow.addColorStop(1,'transparent');
+    ctx.fillStyle=glow;ctx.beginPath();ctx.arc(130,105,r*1.9,0,Math.PI*2);ctx.fill();
+    const cg=ctx.createRadialGradient(118,93,0,130,105,r);
+    cg.addColorStop(0,'#fff');cg.addColorStop(0.45,p.col+'88');cg.addColorStop(1,p.col);
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(130,105,r,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=4;ctx.lineCap='round';
+    ctx.beginPath();ctx.arc(130,105,r+7,-Math.PI/2,-Math.PI/2+prog*Math.PI*2);ctx.stroke();
+  })();
 }
 
 function buildWave(body){
@@ -1047,6 +1109,169 @@ function buildTree(body){
     const ms=document.getElementById('tr-ms');if(ms){ms.className='mstat off';ms.textContent='Tap left or right side to sway the tree!';}
   }
 }
+
+// ── BLOOP BUDDY ───────────────────────────────
+(function(){
+  const cv=document.getElementById('buddy-cv');
+  if(!cv)return;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const S=52;
+  cv.width=S*dpr; cv.height=S*dpr;
+  cv.style.width=S+'px'; cv.style.height=S+'px';
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const MSGS={
+    excited:['Woohoo! 🎉','Great work! ✨','So proud of you! 🌟','You did it! 💙','Feeling amazing! 🌈'],
+    happy:  ['Feeling good! 😊','Nice one! 🌊','That really helped ✨','Love seeing you here! 💙'],
+    neutral:['Hi there! 👋','Pick a tool! 🧰',"I'm here for you 🫧",'Ready when you are 💙'],
+    sad:    ['Miss you… 💙','Come back soon? 🥺','A tool might help 🌱','Thinking of you…'],
+    sleepy: ['*yawns* 💤','Zzz… wake me up! 😴','Been a while… 🫧','Hello? Anyone there? 👋'],
+  };
+  const TOOL_MSGS={
+    candle:'Gentle breaths… 🕯️', bubbles:'Pop those bubbles! 🫧', dragon:'ROAR! 🐉',
+    pinwheel:'Spin spin spin! 🌀', balloon:'Fill it up! 🎈', shake:'Shake it out! 🫨',
+    star:'Breathe with the sunrise 🌅', drum:'Feel the beat! 🥁',
+    butterfly:'Left, right, left… 🦋', finger:'Trace each finger 🖐', wave:'Make waves! 🌊',
+    rainbow:'Draw your rainbow 🌈', lava:'Just breathe… 🫙', garden:'Grow a flower 🌱',
+    heart:'Feel your heartbeat 🫀', jar:'Add a star ⭐', tree:'Sway with the tree 🌳',
+  };
+
+  let t=0, bobble=0, bubbleTimer=null;
+
+  function getMood(){
+    const last=parseInt(localStorage.getItem('bloop-buddy-last')||'0');
+    if(!last) return 'neutral';
+    const ago=Date.now()-last;
+    if(ago < 5*60*1000)       return 'excited';
+    if(ago < 60*60*1000)      return 'happy';
+    if(ago < 24*60*60*1000)   return 'neutral';
+    if(ago < 48*60*60*1000)   return 'sad';
+    return 'sleepy';
+  }
+
+  window.buddyNotify=function(toolId){
+    localStorage.setItem('bloop-buddy-last',Date.now().toString());
+    bobble=1.4;
+    const msg=toolId&&TOOL_MSGS[toolId]?TOOL_MSGS[toolId]:MSGS.excited[Math.floor(Math.random()*MSGS.excited.length)];
+    showBubble(msg);
+  };
+
+  window.buddyTap=function(){
+    const mood=getMood();
+    const pool=MSGS[mood];
+    showBubble(pool[Math.floor(Math.random()*pool.length)]);
+    bobble=Math.max(bobble,0.8);
+  };
+
+  function showBubble(text){
+    const el=document.getElementById('buddy-bubble');
+    if(!el)return;
+    el.textContent=text;
+    el.classList.remove('show');
+    void el.offsetWidth;
+    el.classList.add('show');
+    if(bubbleTimer)clearTimeout(bubbleTimer);
+    bubbleTimer=setTimeout(()=>el.classList.remove('show'),2800);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,S,S);
+    t++;
+    if(bobble>0)bobble=Math.max(0,bobble-.016);
+    const mood=getMood();
+    const bob=Math.sin(t*.045)*1.8 + bobble*Math.sin(t*.28)*6;
+    const cx=S/2, cy=S/2+bob;
+
+    // body
+    const grd=ctx.createRadialGradient(cx-4,cy-5,0,cx,cy,18);
+    grd.addColorStop(0,'#C2E9FB'); grd.addColorStop(1,'#5BBDE4');
+    ctx.fillStyle=grd;
+    ctx.beginPath(); ctx.arc(cx,cy,18,0,Math.PI*2); ctx.fill();
+    // highlight
+    ctx.fillStyle='rgba(255,255,255,.32)';
+    ctx.beginPath(); ctx.arc(cx-5,cy-5,7,0,Math.PI*2); ctx.fill();
+
+    const ey=cy-4;
+    ctx.lineCap='round'; ctx.lineWidth=2;
+
+    if(mood==='sleepy'){
+      ctx.strokeStyle='#1a3a5c';
+      ctx.beginPath(); ctx.arc(cx-6,ey,4,.1*Math.PI,.9*Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx+6,ey,4,.1*Math.PI,.9*Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx-4,cy+6); ctx.lineTo(cx+4,cy+6); ctx.stroke();
+      const zp=(t*.7)%52;
+      ctx.globalAlpha=Math.max(0,.9-zp/52);
+      ctx.fillStyle='#7A9AAA';
+      ctx.font=`bold ${7+zp*.05}px Nunito,sans-serif`;
+      ctx.textAlign='center';
+      ctx.fillText('z',cx+14+zp*.12,cy-14-zp*.38);
+      ctx.globalAlpha=1; ctx.textAlign='left';
+      return requestAnimationFrame(draw);
+    }
+
+    if(mood==='sad'){
+      ctx.fillStyle='#1a3a5c';
+      ctx.beginPath(); ctx.arc(cx-6,ey+1,3.5,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx+6,ey+1,3.5,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.7)';
+      ctx.beginPath(); ctx.arc(cx-5,ey,1.2,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx+7,ey,1.2,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='#1a3a5c'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(cx,cy+12,5,Math.PI+.25,Math.PI*2-.25); ctx.stroke();
+      return requestAnimationFrame(draw);
+    }
+
+    // excited / happy / neutral eyes
+    const eyeR=mood==='excited'?5:4;
+    ctx.fillStyle='#1a3a5c';
+    ctx.beginPath(); ctx.arc(cx-6,ey,eyeR,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+6,ey,eyeR,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.75)';
+    ctx.beginPath(); ctx.arc(cx-4.5,ey-1.5,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+7.5,ey-1.5,1.5,0,Math.PI*2); ctx.fill();
+
+    if(mood==='excited'){
+      ctx.fillStyle='rgba(255,215,50,.7)';
+      ctx.beginPath(); ctx.arc(cx-6,ey,2,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx+6,ey,2,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(255,150,100,.38)';
+      ctx.beginPath(); ctx.ellipse(cx-11,cy+2,5,3,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx+11,cy+2,5,3,0,0,Math.PI*2); ctx.fill();
+      [[cx-16,cy-13],[cx+13,cy-15]].forEach(([sx,sy])=>{
+        if(Math.sin(t*.14+sx)>.2){
+          ctx.fillStyle='#FFD166'; ctx.font='9px sans-serif'; ctx.textAlign='center';
+          ctx.fillText('✦',sx,sy); ctx.textAlign='left';
+        }
+      });
+    }
+    if(mood==='happy'){
+      ctx.fillStyle='rgba(255,150,100,.22)';
+      ctx.beginPath(); ctx.ellipse(cx-11,cy+2,5,3,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx+11,cy+2,5,3,0,0,Math.PI*2); ctx.fill();
+    }
+
+    const smileR=mood==='excited'?8:mood==='happy'?7:5;
+    const smileY=mood==='excited'?cy+2:cy+4;
+    ctx.strokeStyle='#1a3a5c'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(cx,smileY,smileR,.18,Math.PI-.18); ctx.stroke();
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+
+  // Greet on first load
+  setTimeout(()=>{
+    const mood=getMood();
+    if(mood==='neutral'&&!localStorage.getItem('bloop-buddy-last')){
+      showBubble("Hi! I'm Bloop 🫧");
+    } else {
+      const pool=MSGS[mood];
+      showBubble(pool[Math.floor(Math.random()*pool.length)]);
+    }
+  },1200);
+})();
 
 // ── SAFETY BUTTON ─────────────────────────────
 let safPhase=0,safTimer=null;
